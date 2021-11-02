@@ -9,19 +9,24 @@
 # http://inventwithpython.com/pygame
 # Released under a "Simplified BSD" license
 
-import random, sys, time, math, pygame
+#AT
+#the modules random, sys, time, math and pygame are being imported 
+import random, sys, time, math, pygame 
 from pygame.locals import *
 
+#the dimensions of the playing screen are being defined as well as the speed of the animation 
 FPS = 30 # frames per second to update the screen
 WINWIDTH = 640 # width of the program's window, in pixels
 WINHEIGHT = 480 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
+#assigning RGB colour codes for colour variables
 GRASSCOLOR = (24, 255, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 
+#assigning numerical values to be the magnitudes for certain movements in the game 
 CAMERASLACK = 90     # how far from the center the squirrel moves before moving the camera
 MOVERATE = 9         # how fast the player moves
 BOUNCERATE = 6       # how fast the player bounces (large is slower)
@@ -32,14 +37,16 @@ INVULNTIME = 2       # how long the player is invulnerable after being hit in se
 GAMEOVERTIME = 4     # how long the "game over" text stays on the screen in seconds
 MAXHEALTH = 3        # how much health the player starts with
 
+#defining the number of objects in the active game screen and setting statistics for the objects 
 NUMGRASS = 80        # number of grass objects in the active area
 NUMSQUIRRELS = 30    # number of squirrels in the active area
 SQUIRRELMINSPEED = 3 # slowest squirrel speed
 SQUIRRELMAXSPEED = 7 # fastest squirrel speed
 DIRCHANGEFREQ = 2    # % chance of direction change per frame
-LEFT = 'left'
-RIGHT = 'right'
+LEFT = 'left'        # setting the left control variable 
+RIGHT = 'right'      # setting the right control variable 
 
+# defining terminolgy that is used within the code 
 """
 This program has three data structures to represent the player, enemy squirrels, and grass background objects. The data structures are dictionaries with the following keys:
 
@@ -65,7 +72,8 @@ Enemy Squirrel data structure keys:
 Grass data structure keys:
     'grassImage' - an integer that refers to the index of the pygame.Surface object in GRASSIMAGES used for this grass object
 """
-
+# a function setting up the game's main screen, the icons and images that show up aswell as the font and an internal timer
+# if this funtion results in true, it will run the game
 def main():
     global FPSCLOCK, DISPLAYSURF, BASICFONT, L_SQUIR_IMG, R_SQUIR_IMG, GRASSIMAGES
 
