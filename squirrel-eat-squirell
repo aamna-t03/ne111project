@@ -10,23 +10,23 @@
 # Released under a "Simplified BSD" license
 
 #AT
-#the modules random, sys, time, math and pygame are being imported 
+#AT: the modules random, sys, time, math and pygame are being imported 
 import random, sys, time, math, pygame 
 from pygame.locals import *
 
-#the dimensions of the playing screen are being defined as well as the speed of the animation 
+#AT: the dimensions of the playing screen are being defined as well as the speed of the animation 
 FPS = 30 # frames per second to update the screen
 WINWIDTH = 640 # width of the program's window, in pixels
 WINHEIGHT = 480 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
-#assigning RGB colour codes for colour variables
+#AT: assigning RGB colour codes for colour variables
 GRASSCOLOR = (24, 255, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 
-#assigning numerical values to be the magnitudes for certain movements in the game 
+#AT: assigning numerical values to be the magnitudes for certain movements in the game 
 CAMERASLACK = 90     # how far from the center the squirrel moves before moving the camera
 MOVERATE = 9         # how fast the player moves
 BOUNCERATE = 6       # how fast the player bounces (large is slower)
@@ -37,7 +37,7 @@ INVULNTIME = 2       # how long the player is invulnerable after being hit in se
 GAMEOVERTIME = 4     # how long the "game over" text stays on the screen in seconds
 MAXHEALTH = 3        # how much health the player starts with
 
-#defining the number of objects in the active game screen and setting statistics for the objects 
+#AT: defining the number of objects in the active game screen and setting statistics for the objects 
 NUMGRASS = 80        # number of grass objects in the active area
 NUMSQUIRRELS = 30    # number of squirrels in the active area
 SQUIRRELMINSPEED = 3 # slowest squirrel speed
@@ -46,7 +46,7 @@ DIRCHANGEFREQ = 2    # % chance of direction change per frame
 LEFT = 'left'        # setting the left control variable 
 RIGHT = 'right'      # setting the right control variable 
 
-# defining terminolgy that is used within the code 
+#AT: defining terminolgy that is used within the code 
 """
 This program has three data structures to represent the player, enemy squirrels, and grass background objects. The data structures are dictionaries with the following keys:
 
@@ -72,8 +72,8 @@ Enemy Squirrel data structure keys:
 Grass data structure keys:
     'grassImage' - an integer that refers to the index of the pygame.Surface object in GRASSIMAGES used for this grass object
 """
-# a function setting up the game's main screen, the icons and images that show up aswell as the font and an internal timer
-# if this funtion results in true, it will run the game
+#AT: a function setting up the game's main screen, the icons and images that show up aswell as the font and an internal timer
+#AT: if this funtion results in true, it will run the game
 def main():
     global FPSCLOCK, DISPLAYSURF, BASICFONT, L_SQUIR_IMG, R_SQUIR_IMG, GRASSIMAGES
 
@@ -94,35 +94,42 @@ def main():
     while True:
         runGame()
 
-
+#KB
+#KB: defining the function of running the game
 def runGame():
     # set up variables for the start of a new game
-    invulnerableMode = False  # if the player is invulnerable
+    invulnerableMode = False  # if the player is invulnerable 
     invulnerableStartTime = 0 # time the player became invulnerable
     gameOverMode = False      # if the player has lost
     gameOverStartTime = 0     # time the player lost
     winMode = False           # if the player has won
 
     # create the surfaces to hold game text
-    gameOverSurf = BASICFONT.render('Game Over', True, WHITE)
+    #KB: when the game is over, 'Game Over' appears in white 
+    gameOverSurf = BASICFONT.render('Game Over', True, WHITE) 
     gameOverRect = gameOverSurf.get_rect()
     gameOverRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
 
+    #KB: when you have achieved the maximum size, and have won the game, 'You have achieved OMEGA SQUIRREL!' will appear on the screen in white
     winSurf = BASICFONT.render('You have achieved OMEGA SQUIRREL!', True, WHITE)
     winRect = winSurf.get_rect()
     winRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
 
+    #KB: telling the user to restart the game by printing 'Press "r" to restart' on the screen in white
     winSurf2 = BASICFONT.render('(Press "r" to restart.)', True, WHITE)
     winRect2 = winSurf2.get_rect()
     winRect2.center = (HALF_WINWIDTH, HALF_WINHEIGHT + 30)
 
+    #KB: the starting location of the camera is at (0,0)
     # camerax and cameray are the top left of where the camera view is
     camerax = 0
     cameray = 0
 
+    #KB: storage and location of files
     grassObjs = []    # stores all the grass objects in the game
     squirrelObjs = [] # stores all the non-player squirrel objects
     # stores the player object:
+    # KB: stores the startsize, height, and width of the player object
     playerObj = {'surface': pygame.transform.scale(L_SQUIR_IMG, (STARTSIZE, STARTSIZE)),
                  'facing': LEFT,
                  'size': STARTSIZE,
@@ -131,6 +138,7 @@ def runGame():
                  'bounce':0,
                  'health': MAXHEALTH}
 
+    # KB: declaring the starting directional variables as False because the object is still at the start
     moveLeft  = False
     moveRight = False
     moveUp    = False
@@ -147,7 +155,7 @@ def runGame():
         if invulnerableMode and time.time() - invulnerableStartTime > INVULNTIME:
             invulnerableMode = False
 
-        # move all the squirrels
+        # KB: adjusting the bounce and movement of the enemy squirrels
         for sObj in squirrelObjs:
             # move the squirrel, and adjust for their bounce
             sObj['x'] += sObj['movex']
@@ -157,6 +165,7 @@ def runGame():
                 sObj['bounce'] = 0 # reset bounce amount
 
             # random chance they change direction
+            # KB: the enemy squirrels move with random change of directions 
             if random.randint(0, 99) < DIRCHANGEFREQ:
                 sObj['movex'] = getRandomVelocity()
                 sObj['movey'] = getRandomVelocity()
@@ -167,6 +176,7 @@ def runGame():
 
 
         # go through all the objects and see if any need to be deleted.
+        # KB: when objects are not displayed on the active screen, they are deleted fromt eh game
         for i in range(len(grassObjs) - 1, -1, -1):
             if isOutsideActiveArea(camerax, cameray, grassObjs[i]):
                 del grassObjs[i]
@@ -175,12 +185,14 @@ def runGame():
                 del squirrelObjs[i]
 
         # add more grass & squirrels if we don't have enough.
+        # KB: based on predetermined limits of grass and squirrels, add more grass and squirrels
         while len(grassObjs) < NUMGRASS:
             grassObjs.append(makeNewGrass(camerax, cameray))
         while len(squirrelObjs) < NUMSQUIRRELS:
             squirrelObjs.append(makeNewSquirrel(camerax, cameray))
 
         # adjust camerax and cameray if beyond the "camera slack"
+        # KB: adjusting the camera based on the location of the squirrel from the center
         playerCenterx = playerObj['x'] + int(playerObj['size'] / 2)
         playerCentery = playerObj['y'] + int(playerObj['size'] / 2)
         if (camerax + HALF_WINWIDTH) - playerCenterx > CAMERASLACK:
