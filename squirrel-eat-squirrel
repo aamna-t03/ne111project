@@ -204,10 +204,13 @@ def runGame():
         elif playerCentery - (cameray + HALF_WINHEIGHT) > CAMERASLACK:
             cameray = playerCentery - CAMERASLACK - HALF_WINHEIGHT
 
+        # HH: 
+        # HH: Setting up the game layout
         # draw the green background
         DISPLAYSURF.fill(GRASSCOLOR)
 
         # draw all the grass objects on the screen
+        # HH: Determine properties and position of grass
         for gObj in grassObjs:
             gRect = pygame.Rect( (gObj['x'] - camerax,
                                   gObj['y'] - cameray,
@@ -217,6 +220,7 @@ def runGame():
 
 
         # draw the other squirrels
+        # HH: Determine properties and position of enemy squirrels
         for sObj in squirrelObjs:
             sObj['rect'] = pygame.Rect( (sObj['x'] - camerax,
                                          sObj['y'] - cameray - getBounceAmount(sObj['bounce'], sObj['bouncerate'], sObj['bounceheight']),
@@ -226,6 +230,8 @@ def runGame():
 
 
         # draw the player squirrel
+        # HH: Determine properties and position of the player squirrel
+        # HH: FlashIsOn is rounding the game time to 1 digit, multiplying by 10, divinding by 2 and checking if the remainder is equal to 1
         flashIsOn = round(time.time(), 1) * 10 % 2 == 1
         if not gameOverMode and not (invulnerableMode and flashIsOn):
             playerObj['rect'] = pygame.Rect( (playerObj['x'] - camerax,
@@ -238,6 +244,7 @@ def runGame():
         # draw the health meter
         drawHealthMeter(playerObj['health'])
 
+        # HH: Creating a loop for the game controls and the corresponding player movements
         for event in pygame.event.get(): # event handling loop
             if event.type == QUIT:
                 terminate()
@@ -295,6 +302,8 @@ def runGame():
             if playerObj['bounce'] > BOUNCERATE:
                 playerObj['bounce'] = 0 # reset bounce amount
 
+            #LK:
+            #LK: Defining player collisions with enemy squirrels
             # check if the player has collided with any squirrels
             for i in range(len(squirrelObjs)-1, -1, -1):
                 sqObj = squirrelObjs[i]
@@ -311,9 +320,11 @@ def runGame():
                         if playerObj['facing'] == RIGHT:
                             playerObj['surface'] = pygame.transform.scale(R_SQUIR_IMG, (playerObj['size'], playerObj['size']))
 
+                        #LK: What happens when player achieves 'Omega Squirrel' and win conditions
                         if playerObj['size'] > WINSIZE:
                             winMode = True # turn on "win mode"
 
+                    #LK: Deffining damage taken during collision with larger enemy squirrel
                     elif not invulnerableMode:
                         # player is smaller and takes damage
                         invulnerableMode = True
@@ -322,7 +333,9 @@ def runGame():
                         if playerObj['health'] == 0:
                             gameOverMode = True # turn on "game over mode"
                             gameOverStartTime = time.time()
-        else:
+      
+      # LK: endgame behaviour(game over versus win)
+       else:
             # game is over, show "game over" text
             DISPLAYSURF.blit(gameOverSurf, gameOverRect)
             if time.time() - gameOverStartTime > GAMEOVERTIME:
@@ -339,6 +352,7 @@ def runGame():
 
 
 
+#LK: defining health properties 
 def drawHealthMeter(currentHealth):
     for i in range(currentHealth): # draw red health bars
         pygame.draw.rect(DISPLAYSURF, RED,   (15, 5 + (10 * MAXHEALTH) - i * 10, 20, 10))
@@ -346,11 +360,13 @@ def drawHealthMeter(currentHealth):
         pygame.draw.rect(DISPLAYSURF, WHITE, (15, 5 + (10 * MAXHEALTH) - i * 10, 20, 10), 1)
 
 
+#LK: closing the game
 def terminate():
     pygame.quit()
     sys.exit()
 
 
+#LK: Bounce animation properties
 def getBounceAmount(currentBounce, bounceRate, bounceHeight):
     # Returns the number of pixels to offset based on the bounce.
     # Larger bounceRate means a slower bounce.
@@ -358,6 +374,7 @@ def getBounceAmount(currentBounce, bounceRate, bounceHeight):
     # currentBounce will always be less than bounceRate
     return int(math.sin( (math.pi / float(bounceRate)) * currentBounce ) * bounceHeight)
 
+#LK: defining randomized enemy squirrel speeds and directions
 def getRandomVelocity():
     speed = random.randint(SQUIRRELMINSPEED, SQUIRRELMAXSPEED)
     if random.randint(0, 1) == 0:
@@ -366,6 +383,7 @@ def getRandomVelocity():
         return -speed
 
 
+#LK: determining object locations before appearing on screen
 def getRandomOffCameraPos(camerax, cameray, objWidth, objHeight):
     # create a Rect of the camera view
     cameraRect = pygame.Rect(camerax, cameray, WINWIDTH, WINHEIGHT)
@@ -379,6 +397,7 @@ def getRandomOffCameraPos(camerax, cameray, objWidth, objHeight):
             return x, y
 
 
+#LK: creating new enemy squirrels outside active area
 def makeNewSquirrel(camerax, cameray):
     sq = {}
     generalSize = random.randint(5, 25)
@@ -398,6 +417,7 @@ def makeNewSquirrel(camerax, cameray):
     return sq
 
 
+#LK: creating new grass objects outside active area
 def makeNewGrass(camerax, cameray):
     gr = {}
     gr['grassImage'] = random.randint(0, len(GRASSIMAGES) - 1)
@@ -408,6 +428,7 @@ def makeNewGrass(camerax, cameray):
     return gr
 
 
+#LK: defining boundaries of the extent of the display
 def isOutsideActiveArea(camerax, cameray, obj):
     # Return False if camerax and cameray are more than
     # a half-window length beyond the edge of the window.
@@ -418,5 +439,6 @@ def isOutsideActiveArea(camerax, cameray, obj):
     return not boundsRect.colliderect(objRect)
 
 
+#LK: will run if module was executed directly 
 if __name__ == '__main__':
     main()
