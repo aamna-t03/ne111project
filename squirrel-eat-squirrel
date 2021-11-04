@@ -14,19 +14,19 @@
 import random, sys, time, math, pygame 
 from pygame.locals import *
 
-#AT: the dimensions of the playing screen are being defined as well as the speed of the animation 
+#AT: the dimensions of the playing screen are defined as well as the speed of the animation. All these variables are constant values 
 FPS = 30 # frames per second to update the screen
 WINWIDTH = 640 # width of the program's window, in pixels
 WINHEIGHT = 480 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
-#AT: assigning RGB colour codes for colour variables
+#AT: assigning RGB colour codes for the colour variables, green for the background, white for text and health bar outline, and red for the health bar levels
 GRASSCOLOR = (24, 255, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 
-#AT: assigning numerical values to be the magnitudes for certain movements in the game 
+#AT: assigning numerical values for various allowed movements in the game, limits for the players health bar, and in seconds, how long certain events last
 CAMERASLACK = 90     # how far from the center the squirrel moves before moving the camera
 MOVERATE = 9         # how fast the player moves
 BOUNCERATE = 6       # how fast the player bounces (large is slower)
@@ -46,8 +46,8 @@ DIRCHANGEFREQ = 2    # % chance of direction change per frame
 LEFT = 'left'        # setting the left control variable 
 RIGHT = 'right'      # setting the right control variable 
 
-#AT: defining terminolgy that is used within the code 
-#AT: side note - the term 'active area' is a bounded area on all sides of the camera view, where objects exist and are created 
+#AT: the following is a long string defining terminology that is used throughout the code 
+#AT: side note - the term 'active area' is a bounded area (a HALF_WINWIDTH and HALF_WINHEIGHT) on all sides of the camera view, where objects exist and are created 
 """
 This program has three data structures to represent the player, enemy squirrels, and grass background objects. The data structures are dictionaries with the following keys:
 
@@ -73,7 +73,7 @@ Enemy Squirrel data structure keys:
 Grass data structure keys:
     'grassImage' - an integer that refers to the index of the pygame.Surface object in GRASSIMAGES used for this grass object
 """
-#AT: a function setting up the game's main screen, the icons and images that show up aswell as the font and an internal timer
+#AT: a function setting up the game's main screen, the icons and images that are used as well as the fonts used for text and an internal timer
 #AT: if this funtion results in true, it will run the game
 def main():
     global FPSCLOCK, DISPLAYSURF, BASICFONT, L_SQUIR_IMG, R_SQUIR_IMG, GRASSIMAGES
@@ -85,6 +85,7 @@ def main():
     pygame.display.set_caption('Squirrel Eat Squirrel')
     BASICFONT = pygame.font.Font('freesansbold.ttf', 32)
 
+    # AT: this part of the function also ensures that the squirrel images are oriented upright by using the built in pygame.transform.flip function  
     # load the image files
     L_SQUIR_IMG = pygame.image.load('squirrel.png')
     R_SQUIR_IMG = pygame.transform.flip(L_SQUIR_IMG, True, False)
@@ -206,12 +207,12 @@ def runGame():
             cameray = playerCentery - CAMERASLACK - HALF_WINHEIGHT
 
         # HH: 
-        # HH: Setting up the game layout
+        # HH: Setting up the game layout, this makes the entire screen the green colour previously assigned 
         # draw the green background
         DISPLAYSURF.fill(GRASSCOLOR)
 
         # draw all the grass objects on the screen
-        # HH: Determine properties and position of grass
+        # HH: Determine properties and position of all the grass images
         for gObj in grassObjs:
             gRect = pygame.Rect( (gObj['x'] - camerax,
                                   gObj['y'] - cameray,
@@ -232,7 +233,9 @@ def runGame():
 
         # draw the player squirrel
         # HH: Determine properties and position of the player squirrel
-        # HH: FlashIsOn is rounding the game time to 1 digit, multiplying by 10, divinding by 2 and checking if the remainder is equal to 1
+        # HH: if the player squirrel is damaged, it flashes to indicate the injury to its health. The flash effect is done by having the squirrel appear and dissapear every tenth of a second
+        # HH: the flashing continues for as long as invulnerable mode is on, which has already been established to be 2 seconds
+        # HH: FlashIsOn is pulls the current time and rounds the game time to 1 digit, multiplying by 10, divinding by 2 and checking if the remainder is equal to 1, if this is true, it will continue flashing 
         flashIsOn = round(time.time(), 1) * 10 % 2 == 1
         if not gameOverMode and not (invulnerableMode and flashIsOn):
             playerObj['rect'] = pygame.Rect( (playerObj['x'] - camerax,
@@ -245,7 +248,9 @@ def runGame():
         # draw the health meter
         drawHealthMeter(playerObj['health'])
 
-        # HH: Creating a loop for the game controls and the corresponding player movements
+        # HH: Creating a loop for the game controls with corresponding events
+        # HH: Defining player movements with the arrow keys (i.e. the event, hitting the right arrow key corresponds to moveRight)
+        # HH: if the event 'quit' has occured the games ends 
         for event in pygame.event.get(): # event handling loop
             if event.type == QUIT:
                 terminate()
@@ -285,7 +290,8 @@ def runGame():
 
                 elif event.key == K_ESCAPE:
                     terminate()
-
+                    
+        # HH: with the moveRight and moveLeft variables assigned, these statments actually move the player on screen as well as how the player bounces as they move 
         if not gameOverMode:
             # actually move the player
             if moveLeft:
