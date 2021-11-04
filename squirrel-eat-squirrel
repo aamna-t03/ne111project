@@ -95,8 +95,8 @@ def main():
     while True:
         runGame()
 
-#KB
-#KB: defining the function of running the game
+# KB:
+# KB: Defining more detailed game set up - this is identifying some of the more complex variables
 def runGame():
     # set up variables for the start of a new game
     invulnerableMode = False  # if the player is invulnerable 
@@ -106,27 +106,32 @@ def runGame():
     winMode = False           # if the player has won
 
     # create the surfaces to hold game text
-    #KB: when the game is over, 'Game Over' appears in white 
+    #KB: Creating the Surface object that appears when the game is over -> 'Game Over' appears in white 
     gameOverSurf = BASICFONT.render('Game Over', True, WHITE) 
     gameOverRect = gameOverSurf.get_rect()
     gameOverRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
 
-    #KB: when you have achieved the maximum size, and have won the game, 'You have achieved OMEGA SQUIRREL!' will appear on the screen in white
+    # KB: Creating the Surface object when you have achieved the maximum size, and have won the game. 
+    # KB: it prints, 'You have achieved OMEGA SQUIRREL!' will appear on the screen in white.
     winSurf = BASICFONT.render('You have achieved OMEGA SQUIRREL!', True, WHITE)
     winRect = winSurf.get_rect()
     winRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
 
-    #KB: telling the user to restart the game by printing 'Press "r" to restart' on the screen in white
+    # KB: Creating the Surface object telling the user to restart the game after the game has ended
+    # KB: it prints, 'Press "r" to restart' on the screen in white
     winSurf2 = BASICFONT.render('(Press "r" to restart.)', True, WHITE)
     winRect2 = winSurf2.get_rect()
     winRect2.center = (HALF_WINWIDTH, HALF_WINHEIGHT + 30)
 
-    #KB: the starting location of the camera is at (0,0)
+    # KB: these variables track the game coordiates of the camera
+    # KB: this is stating the camera location starts at the gameworld origin
     # camerax and cameray are the top left of where the camera view is
     camerax = 0
     cameray = 0
 
-    #KB: storage and location of files
+    # KB: Tracking the location of objects 
+    # KB: as grass is added to the screen it is added to the list 'grassObjs' 
+    # KB: as enemy squirrels are added to the screen, they are added to the list 'squirrelObjs'
     grassObjs = []    # stores all the grass objects in the game
     squirrelObjs = [] # stores all the non-player squirrel objects
     # stores the player object:
@@ -139,7 +144,7 @@ def runGame():
                  'bounce':0,
                  'health': MAXHEALTH}
 
-    # KB: declaring the starting directional variables as False because the object is still at the start
+    # KB: Track which of the arrow keys or 'AWSD' keys are being held down
     moveLeft  = False
     moveRight = False
     moveUp    = False
@@ -151,12 +156,17 @@ def runGame():
         grassObjs[i]['x'] = random.randint(0, WINWIDTH)
         grassObjs[i]['y'] = random.randint(0, WINHEIGHT)
 
+    # KB: the game loop will update game state, do event handling, and create everything on the screen
     while True: # main game loop
         # Check if we should turn off invulnerability
+        # KB: when a player hits an enemy squirrel, it becomes invulnerable for 2 seconds
+        # KB: during this time, the playerObj will not take damage
+        # KB: when the invulnerable time is over, it is set to false
         if invulnerableMode and time.time() - invulnerableStartTime > INVULNTIME:
             invulnerableMode = False
 
         # KB: adjusting the bounce and movement of the enemy squirrels
+        # KB: the smaller the 'movex' and 'movey' values the shorter the squirrel travels each iteration of the game loop 
         for sObj in squirrelObjs:
             # move the squirrel, and adjust for their bounce
             sObj['x'] += sObj['movex']
@@ -167,6 +177,8 @@ def runGame():
 
             # random chance they change direction
             # KB: the enemy squirrels move with random change of directions 
+            # KB: 'DIRCHANGEFREQ' is set to 2 from previous code and 'random.randint(0, 99)' will select a random value in the interval 0 to 99
+            # KB: therefore if the value of 'random.randint(0, 99) is less than 2, then the sObj will get assigned random velocities
             if random.randint(0, 99) < DIRCHANGEFREQ:
                 sObj['movex'] = getRandomVelocity()
                 sObj['movey'] = getRandomVelocity()
@@ -177,7 +189,8 @@ def runGame():
 
 
         # go through all the objects and see if any need to be deleted.
-        # KB: when objects are outsidethe active area, they are deleted from the game
+        # KB: 'isOutsideActiveArea' takes the coordinates of the camera and the objects and determines if the objects are in the active area
+        # KB: if the objects are outside the active area, then they are deleted 
         for i in range(len(grassObjs) - 1, -1, -1):
             if isOutsideActiveArea(camerax, cameray, grassObjs[i]):
                 del grassObjs[i]
@@ -186,14 +199,17 @@ def runGame():
                 del squirrelObjs[i]
 
         # add more grass & squirrels if we don't have enough.
-        # KB: based on predetermined limits of grass and squirrels, add more grass and squirrels
+        # KB: based on predetermined limits of grass (NUMGRASS) and squirrels (NUMSQUIRRELS) 
+        # KB: if the length of the 'grassObj' list drops below 'NUMGRASS', more grass objects are added, and
+        # KB: if the length of the 'squirrelObj' list goes below 'NUMSQUIRREL', more squirrels are created 
         while len(grassObjs) < NUMGRASS:
             grassObjs.append(makeNewGrass(camerax, cameray))
         while len(squirrelObjs) < NUMSQUIRRELS:
             squirrelObjs.append(makeNewSquirrel(camerax, cameray))
 
         # adjust camerax and cameray if beyond the "camera slack"
-        # KB: adjusting the camera based on the location of the squirrel from the center
+        # KB: 'CAMERASLACK' is predetermined in the code to 90 pixels
+        # KB: this part of the code adjusts the camera location when the playerObj is more than 90 pixels from the center of the screen 
         playerCenterx = playerObj['x'] + int(playerObj['size'] / 2)
         playerCentery = playerObj['y'] + int(playerObj['size'] / 2)
         if (camerax + HALF_WINWIDTH) - playerCenterx > CAMERASLACK:
