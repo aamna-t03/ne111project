@@ -306,6 +306,7 @@ def runGame():
             #LK:
             #LK: Defining player collisions with enemy squirrels
             # check if the player has collided with any squirrels
+            #LK: will start from the last index of squirrelObjs in order to prevent loop from deleting eaten squirrel objects
             for i in range(len(squirrelObjs)-1, -1, -1):
                 sqObj = squirrelObjs[i]
                 if 'rect' in sqObj and playerObj['rect'].colliderect(sqObj['rect']):
@@ -313,19 +314,26 @@ def runGame():
 
                     if sqObj['width'] * sqObj['height'] <= playerObj['size']**2:
                         # player is larger and eats the squirrel
+                        #LK: checks if player is larger than or equal to size of enemy squirrel and is yes, player eats them
+                        #LK: amount of growth is calculated based off of size of enemy squirrel eaten
                         playerObj['size'] += int( (sqObj['width'] * sqObj['height'])**0.2 ) + 1
                         del squirrelObjs[i]
 
+                        #LK: using the pygame.transform.scale function, the squirrel image is enlarged accordingly
+                        #LK: returns new squirrel image based off of which way original squirrel image is facing (left or right) 
                         if playerObj['facing'] == LEFT:
                             playerObj['surface'] = pygame.transform.scale(L_SQUIR_IMG, (playerObj['size'], playerObj['size']))
                         if playerObj['facing'] == RIGHT:
                             playerObj['surface'] = pygame.transform.scale(R_SQUIR_IMG, (playerObj['size'], playerObj['size']))
 
-                        #LK: What happens when player achieves 'Omega Squirrel' and win conditions
+                        #LK: What happens when player achieves 'Omega Squirrel' size and win conditions
                         if playerObj['size'] > WINSIZE:
                             winMode = True # turn on "win mode"
 
                     #LK: Deffining damage taken during collision with larger enemy squirrel
+                    #LK: if player size is not larger than or equal to enemy squirrel size, the invulnerableMode is not set to True and the player will take damage 
+                    #LK: after damage is taken, invulnerableMode will be set to True for a certain time so that the player does not take unnecessary more than once per hit
+                    #LK: damage results in a loss of one health. The program will set gameOverMode to True if player health is 0
                     elif not invulnerableMode:
                         # player is smaller and takes damage
                         invulnerableMode = True
@@ -335,12 +343,14 @@ def runGame():
                             gameOverMode = True # turn on "game over mode"
                             gameOverStartTime = time.time()
       
-      # LK: endgame behaviour(game over versus win)
+      # LK: how long the "Game Over" text is shown before the new game starts when the player dies 
        else:
             # game is over, show "game over" text
             DISPLAYSURF.blit(gameOverSurf, gameOverRect)
             if time.time() - gameOverStartTime > GAMEOVERTIME:
                 return # end the current game
+        #LK: how long the "You have achieved OMEGA SQUIRREL!" and "Press 'r' to restart" text are shown on screen when the player wins
+        #LK: when the player presses 'r' key, the game will stop running and the program execution will return from rungame.() 
 
         # check if the player has won.
         if winMode:
@@ -353,7 +363,8 @@ def runGame():
 
 
 
-#LK: defining health properties 
+#LK: defining health meter display
+#LK: first defines the red blocks representing the player's health, then the unfilled white rectangle for empty possible health
 def drawHealthMeter(currentHealth):
     for i in range(currentHealth): # draw red health bars
         pygame.draw.rect(DISPLAYSURF, RED,   (15, 5 + (10 * MAXHEALTH) - i * 10, 20, 10))
@@ -368,6 +379,7 @@ def terminate():
 
 
 #LK: Bounce animation properties
+#LK: Bouce animation is determined by positive values for the sine function
 def getBounceAmount(currentBounce, bounceRate, bounceHeight):
     # Returns the number of pixels to offset based on the bounce.
     # Larger bounceRate means a slower bounce.
@@ -376,6 +388,7 @@ def getBounceAmount(currentBounce, bounceRate, bounceHeight):
     return int(math.sin( (math.pi / float(bounceRate)) * currentBounce ) * bounceHeight)
 
 #LK: defining randomized enemy squirrel speeds and directions
+#LK: positive value corresponds to right or down, and negative value corresponds to left or up
 def getRandomVelocity():
     speed = random.randint(SQUIRRELMINSPEED, SQUIRRELMAXSPEED)
     if random.randint(0, 1) == 0:
@@ -384,7 +397,9 @@ def getRandomVelocity():
         return -speed
 
 
-#LK: determining object locations before appearing on screen
+#LK: determining object locations in active area before appearing on screen
+#LK: generate xy points in active area and select those that do not interfere with screen display 
+#LK: If points do interfere, discard them and generate new points
 def getRandomOffCameraPos(camerax, cameray, objWidth, objHeight):
     # create a Rect of the camera view
     cameraRect = pygame.Rect(camerax, cameray, WINWIDTH, WINHEIGHT)
@@ -399,6 +414,7 @@ def getRandomOffCameraPos(camerax, cameray, objWidth, objHeight):
 
 
 #LK: creating new enemy squirrels inside the active area outside the camera view 
+#LK: defining general squirrel size and deviation range as well as speed
 def makeNewSquirrel(camerax, cameray):
     sq = {}
     generalSize = random.randint(5, 25)
@@ -408,6 +424,8 @@ def makeNewSquirrel(camerax, cameray):
     sq['x'], sq['y'] = getRandomOffCameraPos(camerax, cameray, sq['width'], sq['height'])
     sq['movex'] = getRandomVelocity()
     sq['movey'] = getRandomVelocity()
+    #LK: create mirrored image of squirrel using previously defined size 
+    #LK: this is used for when the squirrel changes direction and must be mirrored
     if sq['movex'] < 0: # squirrel is facing left
         sq['surface'] = pygame.transform.scale(L_SQUIR_IMG, (sq['width'], sq['height']))
     else: # squirrel is facing right
@@ -418,7 +436,8 @@ def makeNewSquirrel(camerax, cameray):
     return sq
 
 
-#LK: creating new grass objects inside the active area outside the camera view 
+#LK: creating new grass objects inside the active area outside the camera view
+#LK: defining how each grass image will be stored 
 def makeNewGrass(camerax, cameray):
     gr = {}
     gr['grassImage'] = random.randint(0, len(GRASSIMAGES) - 1)
