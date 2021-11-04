@@ -113,7 +113,7 @@ def runGame():
     gameOverRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
 
     # KB: Creating the Surface object when you have achieved the maximum size, and have won the game. 
-    # KB: it prints, 'You have achieved OMEGA SQUIRREL!' in white
+    # KB: it prints, 'You have achieved OMEGA SQUIRREL!' will appear on the screen in white.
     winSurf = BASICFONT.render('You have achieved OMEGA SQUIRREL!', True, WHITE)
     winRect = winSurf.get_rect()
     winRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
@@ -162,7 +162,7 @@ def runGame():
         # Check if we should turn off invulnerability
         # KB: when a player hits an enemy squirrel, it becomes invulnerable for 2 seconds
         # KB: during this time, the playerObj will not take damage
-        # KB: when the invulnerable time is over, 'invulnerableMode' is set to false
+        # KB: when the invulnerable time is over, it is set to false
         if invulnerableMode and time.time() - invulnerableStartTime > INVULNTIME:
             invulnerableMode = False
 
@@ -249,11 +249,9 @@ def runGame():
 
         # draw the player squirrel
         # HH: Determine properties and position of the player squirrel
-        # AT: if the player squirrel is damaged, it flashes to indicate the injury to its health
-        # AT: The flash effect is done by having the squirrel appear and dissapear every tenth of a second
+        # AT: if the player squirrel is damaged, it flashes to indicate the injury to its health. The flash effect is done by having the squirrel appear and dissapear every tenth of a second
         # AT: the flashing continues for as long as invulnerable mode is on, which has already been established to be 2 seconds
-        # AT: FlashIsOn pulls the current time and rounds the game time to 1 digit, multiplying by 10, divinding by 2 
-        # AT: then checks if the remainder is equal to 1, if this is true, it will continue flashing 
+        # AT: FlashIsOn is pulls the current time and rounds the game time to 1 digit, multiplying by 10, divinding by 2 and checking if the remainder is equal to 1, if this is true, it will continue flashing 
         flashIsOn = round(time.time(), 1) * 10 % 2 == 1
         if not gameOverMode and not (invulnerableMode and flashIsOn):
             playerObj['rect'] = pygame.Rect( (playerObj['x'] - camerax,
@@ -309,8 +307,7 @@ def runGame():
                 elif event.key == K_ESCAPE:
                     terminate()
                     
-        # HH: with the moveRight and moveLeft variables assigned, these statments move the player on screen
-        # HH: these variables also determine how the player bounces while they move 
+        # HH: with the moveRight and moveLeft variables assigned, these statments actually move the player on screen as well as how the player bounces as they move 
         if not gameOverMode:
             # actually move the player
             if moveLeft:
@@ -339,8 +336,8 @@ def runGame():
 
                     if sqObj['width'] * sqObj['height'] <= playerObj['size']**2:
                         # player is larger and eats the squirrel
-                        #LK: checks if player is larger than or equal to the size of enemy squirrel and if yes, player eats them
-                        #LK: amount of growth is calculated based off of the size of the enemy squirrel eaten
+                        #LK: checks if player is larger than or equal to size of enemy squirrel and is yes, player eats them
+                        #LK: amount of growth is calculated based off of size of enemy squirrel eaten
                         playerObj['size'] += int( (sqObj['width'] * sqObj['height'])**0.2 ) + 1
                         del squirrelObjs[i]
 
@@ -356,8 +353,8 @@ def runGame():
                             winMode = True # turn on "win mode"
 
                     #LK: Deffining damage taken during collision with larger enemy squirrel
-                    #LK: if player size is not larger than or equal to enemy squirrel size, the invulnerableMode is not set to True, and the player will take damage 
-                    #LK: after damage is taken, invulnerableMode will be set to True for a perdetermined time so that the player does not take unnecessary damage more than once per hit
+                    #LK: if player size is not larger than or equal to enemy squirrel size, the invulnerableMode is not set to True and the player will take damage 
+                    #LK: after damage is taken, invulnerableMode will be set to True for a certain time so that the player does not take unnecessary more than once per hit
                     #LK: damage results in a loss of one health. The program will set gameOverMode to True if player health is 0
                     elif not invulnerableMode:
                         # player is smaller and takes damage
@@ -473,7 +470,9 @@ def makeNewGrass(camerax, cameray):
     return gr
 
 
-#LK: defining boundaries of the extent of the active area
+#LK: defining boundaries of the extent of the active area rectangle
+#LK: left edge of active area is determined by camerax-WINWIDTH and top edge is determined by camery-WINHEIGHT 
+#LK: total width and height are determined by WINWIDTH * 3 and WINHEIGHT * 3
 def isOutsideActiveArea(camerax, cameray, obj):
     # Return False if camerax and cameray are more than
     # a half-window length beyond the edge of the window.
