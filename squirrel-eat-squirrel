@@ -37,7 +37,7 @@ INVULNTIME = 2       # how long the player is invulnerable after being hit in se
 GAMEOVERTIME = 4     # how long the "game over" text stays on the screen in seconds
 MAXHEALTH = 3        # how much health the player starts with
 
-#AT: defining the number of objects in the active game screen and setting statistics for the objects 
+#AT: defining the number of objects in the active area and setting statistics for the objects 
 NUMGRASS = 80        # number of grass objects in the active area
 NUMSQUIRRELS = 30    # number of squirrels in the active area
 SQUIRRELMINSPEED = 3 # slowest squirrel speed
@@ -47,6 +47,7 @@ LEFT = 'left'        # setting the left control variable
 RIGHT = 'right'      # setting the right control variable 
 
 #AT: defining terminolgy that is used within the code 
+#AT: side note - the term 'active area' is a bounded area on all sides of the camera view, where objects exist and are created 
 """
 This program has three data structures to represent the player, enemy squirrels, and grass background objects. The data structures are dictionaries with the following keys:
 
@@ -176,7 +177,7 @@ def runGame():
 
 
         # go through all the objects and see if any need to be deleted.
-        # KB: when objects are not displayed on the active screen, they are deleted fromt eh game
+        # KB: when objects are outsidethe active area, they are deleted from the game
         for i in range(len(grassObjs) - 1, -1, -1):
             if isOutsideActiveArea(camerax, cameray, grassObjs[i]):
                 del grassObjs[i]
@@ -397,7 +398,7 @@ def getRandomOffCameraPos(camerax, cameray, objWidth, objHeight):
             return x, y
 
 
-#LK: creating new enemy squirrels outside active area
+#LK: creating new enemy squirrels inside the active area outside the camera view 
 def makeNewSquirrel(camerax, cameray):
     sq = {}
     generalSize = random.randint(5, 25)
@@ -417,7 +418,7 @@ def makeNewSquirrel(camerax, cameray):
     return sq
 
 
-#LK: creating new grass objects outside active area
+#LK: creating new grass objects inside the active area outside the camera view 
 def makeNewGrass(camerax, cameray):
     gr = {}
     gr['grassImage'] = random.randint(0, len(GRASSIMAGES) - 1)
@@ -428,7 +429,7 @@ def makeNewGrass(camerax, cameray):
     return gr
 
 
-#LK: defining boundaries of the extent of the display
+#LK: defining boundaries of the extent of the active area
 def isOutsideActiveArea(camerax, cameray, obj):
     # Return False if camerax and cameray are more than
     # a half-window length beyond the edge of the window.
