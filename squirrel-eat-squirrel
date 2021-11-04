@@ -366,7 +366,7 @@ def runGame():
                             gameOverStartTime = time.time()
       
       # LK: how long the "Game Over" text is shown before the new game starts when the player dies 
-       else:
+      else:
             # game is over, show "game over" text
             DISPLAYSURF.blit(gameOverSurf, gameOverRect)
             if time.time() - gameOverStartTime > GAMEOVERTIME:
