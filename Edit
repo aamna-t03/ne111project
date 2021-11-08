@@ -72,6 +72,8 @@ Enemy Squirrel data structure keys:
     'bounceheight' - how high (in pixels) the squirrel bounces
 Grass data structure keys:
     'grassImage' - an integer that refers to the index of the pygame.Surface object in GRASSIMAGES used for this grass object
+Food data structure keys:
+    'foodImages' - an integer that refers to the index of the pygame.Surface object in FOODIMAGES for this food object 
 """
 #AT: a function setting up the game's main screen, the icons and images that are used as well as the fonts used for text and an internal timer
 #AT: if this funtion results in true, it will run the game
@@ -93,7 +95,6 @@ def main():
     GRASSIMAGES = []
     for i in range(1, 5):
         GRASSIMAGES.append(pygame.image.load('grass%s.png' % i))
-
     FOODIMAGES = []
     for i in range(1, 3):
         FOODIMAGES.append(pygame.image.load('food%s.png' % i))
