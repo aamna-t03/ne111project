@@ -452,9 +452,9 @@ def makeNewSquirrel(camerax, cameray):
     #LK: create mirrored image of squirrel using previously defined size 
     #LK: this is used for when the squirrel changes direction and must be mirrored
     if fd['movex'] < 0: # squirrel is facing left
-        fd['surface'] = pygame.transform.scale(FOOD, (fd['width'], fd['height']))
+        fd['surface'] = pygame.transform.scale(FOODIMAGES, (fd['width'], fd['height']))
     else: # squirrel is facing right
-        fd['surface'] = pygame.transform.scale(FOOD, (fd['width'], fd['height']))
+        fd['surface'] = pygame.transform.scale(FOODIMAGES, (fd['width'], fd['height']))
     fd['bounce'] = 0
     fd['bouncerate'] = random.randint(10, 18)
     fd['bounceheight'] = random.randint(10, 50)
