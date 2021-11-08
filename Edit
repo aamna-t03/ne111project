@@ -76,7 +76,7 @@ Grass data structure keys:
 #AT: a function setting up the game's main screen, the icons and images that are used as well as the fonts used for text and an internal timer
 #AT: if this funtion results in true, it will run the game
 def main():
-    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_RJ, R_RJ, GRASSIMAGES, L_SQUIR_IMG, R_SQUIR_IMG
+    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_RJ, R_RJ, GRASSIMAGES, L_SQUIR_IMG, R_SQUIR_IMG, FOODIMAGES
 
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
@@ -94,6 +94,9 @@ def main():
     for i in range(1, 5):
         GRASSIMAGES.append(pygame.image.load('grass%s.png' % i))
 
+    FOODIMAGES = []
+    for i in range(1, 3):
+        FOODIMAGES.append(pygame.image.load('food%s.png' % i))
     while True:
         runGame()
 
@@ -439,23 +442,23 @@ def getRandomOffCameraPos(camerax, cameray, objWidth, objHeight):
 #LK: creating new enemy squirrels inside the active area outside the camera view 
 #LK: defining general squirrel size and deviation range as well as speed
 def makeNewSquirrel(camerax, cameray):
-    sq = {}
-    generalSize = random.randint(5, 25)
-    sq['width']  = (generalSize + random.randint(0, 10))
-    sq['height'] = (generalSize + random.randint(0, 10))
-    sq['x'], sq['y'] = getRandomOffCameraPos(camerax, cameray, sq['width'], sq['height'])
-    sq['movex'] = getRandomVelocity()
-    sq['movey'] = getRandomVelocity()
+    fd = {}
+    generalSize = random.randint(5, 20)
+    fd['width']  = (generalSize + random.randint(0, 10))
+    fd['height'] = (generalSize + random.randint(0, 10))
+    fd['x'], fd['y'] = getRandomOffCameraPos(camerax, cameray, fd['width'], fd['height'])
+    fd['movex'] = getRandomVelocity()
+    fd['movey'] = getRandomVelocity()
     #LK: create mirrored image of squirrel using previously defined size 
     #LK: this is used for when the squirrel changes direction and must be mirrored
-    if sq['movex'] < 0: # squirrel is facing left
-        sq['surface'] = pygame.transform.scale(L_SQUIR_IMG, (sq['width'], sq['height']))
+    if fd['movex'] < 0: # squirrel is facing left
+        fd['surface'] = pygame.transform.scale(FOOD, (fd['width'], fd['height']))
     else: # squirrel is facing right
-        sq['surface'] = pygame.transform.scale(R_SQUIR_IMG, (sq['width'], sq['height']))
-    sq['bounce'] = 0
-    sq['bouncerate'] = random.randint(10, 18)
-    sq['bounceheight'] = random.randint(10, 50)
-    return sq
+        fd['surface'] = pygame.transform.scale(FOOD, (fd['width'], fd['height']))
+    fd['bounce'] = 0
+    fd['bouncerate'] = random.randint(10, 18)
+    fd['bounceheight'] = random.randint(10, 50)
+    return fd
 
 
 #LK: creating new grass objects inside the active area outside the camera view
