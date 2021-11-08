@@ -95,7 +95,7 @@ def main():
     GRASSIMAGES = []
     for i in range(1, 5):
         GRASSIMAGES.append(pygame.image.load('grass%s.png' % i))
-    FOODIMAGES = ()
+    FOODIMAGES = {}
     for i in range(1, 3):
         FOODIMAGES.append(pygame.image.load('food%s.png' % i))
     while True:
