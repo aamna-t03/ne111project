@@ -76,7 +76,7 @@ Grass data structure keys:
 #AT: a function setting up the game's main screen, the icons and images that are used as well as the fonts used for text and an internal timer
 #AT: if this funtion results in true, it will run the game
 def main():
-    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_SQUIR_IMG, R_SQUIR_IMG, GRASSIMAGES
+    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_RJ, R_RJ, GRASSIMAGES
 
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
@@ -87,6 +87,8 @@ def main():
 
     # AT: this part of the function also ensures that the squirrel images are oriented upright by using the built in pygame.transform.flip function  
     # load the image files
+    L_RJ = pygame.image.load('rj.png')
+    R_RJ = pygame.transform.flip(L_RJ, True, False)
     L_SQUIR_IMG = pygame.image.load('squirrel.png')
     R_SQUIR_IMG = pygame.transform.flip(L_SQUIR_IMG, True, False)
     GRASSIMAGES = []
@@ -137,7 +139,7 @@ def runGame():
     squirrelObjs = [] # stores all the non-player squirrel objects
     # stores the player object:
     # KB: stores the startsize, height, and width of the player object
-    playerObj = {'surface': pygame.transform.scale(L_SQUIR_IMG, (STARTSIZE, STARTSIZE)),
+    playerObj = {'surface': pygame.transform.scale(L_RJ, (STARTSIZE, STARTSIZE)),
                  'facing': LEFT,
                  'size': STARTSIZE,
                  'x': HALF_WINWIDTH,
@@ -282,13 +284,13 @@ def runGame():
                     moveRight = False
                     moveLeft = True
                     if playerObj['facing'] != LEFT: # change player image
-                        playerObj['surface'] = pygame.transform.scale(L_SQUIR_IMG, (playerObj['size'], playerObj['size']))
+                        playerObj['surface'] = pygame.transform.scale(L_RJ, (playerObj['size'], playerObj['size']))
                     playerObj['facing'] = LEFT
                 elif event.key in (K_RIGHT, K_d):
                     moveLeft = False
                     moveRight = True
                     if playerObj['facing'] != RIGHT: # change player image
-                        playerObj['surface'] = pygame.transform.scale(R_SQUIR_IMG, (playerObj['size'], playerObj['size']))
+                        playerObj['surface'] = pygame.transform.scale(R_RJ, (playerObj['size'], playerObj['size']))
                     playerObj['facing'] = RIGHT
                 elif winMode and event.key == K_r:
                     return
@@ -344,9 +346,9 @@ def runGame():
                         #LK: using the pygame.transform.scale function, the squirrel image is enlarged accordingly
                         #LK: returns new squirrel image based off of which way original squirrel image is facing (left or right) 
                         if playerObj['facing'] == LEFT:
-                            playerObj['surface'] = pygame.transform.scale(L_SQUIR_IMG, (playerObj['size'], playerObj['size']))
+                            playerObj['surface'] = pygame.transform.scale(L_RJ, (playerObj['size'], playerObj['size']))
                         if playerObj['facing'] == RIGHT:
-                            playerObj['surface'] = pygame.transform.scale(R_SQUIR_IMG, (playerObj['size'], playerObj['size']))
+                            playerObj['surface'] = pygame.transform.scale(R_RJ, (playerObj['size'], playerObj['size']))
 
                         #LK: What happens when player achieves 'Omega Squirrel' size and win conditions
                         if playerObj['size'] > WINSIZE:
