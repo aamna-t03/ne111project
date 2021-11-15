@@ -344,7 +344,7 @@ def runGame():
                         #LK: checks if player is larger than or equal to size of enemy squirrel and is yes, player eats them
                         #LK: amount of growth is calculated based off of size of enemy squirrel eaten
                         playerObj['size'] += int( (sqObj['width'] * sqObj['height'])**0.2 ) + 1
-                        del FOOD1[i]
+                        del food1Objs[i]
 
                         #LK: using the pygame.transform.scale function, the squirrel image is enlarged accordingly
                         #LK: returns new squirrel image based off of which way original squirrel image is facing (left or right) 
