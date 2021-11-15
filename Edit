@@ -121,7 +121,7 @@ def runGame():
 
     # KB: Creating the Surface object when you have achieved the maximum size, and have won the game. 
     # KB: it prints, 'You have achieved OMEGA SQUIRREL!' will appear on the screen in white.
-    winmessage = ["You Have Achieved SIGMA RJ!", "I Want My Cookies!", "Chances Are, If You Feel Like A Dirtbag, \nYou're A Dirtbag. So Own It! Say It Out Loud, \n\"I Am A Dirtbag.\"", "GG"]
+    winmessage = ["You Have Achieved SIGMA RJ!", "I Want My Cookies!", "GG(good game)"]
     winSurf = random.choice(winmessage)
     winSurf = BASICFONT.render(winSurf, True, WHITE)
     winRect = winSurf.get_rect()
