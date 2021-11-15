@@ -123,7 +123,7 @@ def runGame():
     # KB: it prints, 'You have achieved OMEGA SQUIRREL!' will appear on the screen in white.
     winmessage = ['You Have Achieved SIGMA RJ!', 'I Want My Cookies!', 'Chances Are, If You Feel Like A Dirtbag, You"re A Dirtbag. So Own It! Say It Out Loud, "I Am A Dirtbag."', 'GG']
     winSurf = random.choice(winmessage)
-    winSurf = BASICFONT.render(winSurf, True, White)
+    winSurf = BASICFONT.render(winSurf, True, WHITE)
     winRect = winSurf.get_rect()
     winRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
 
