@@ -22,7 +22,7 @@ HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
 #AT: assigning RGB colour codes for the colour variables, green for the background, white for text and health bar outline, and red for the health bar levels
-GRASSCOLOR = (24, 255, 0)
+GRASSCOLOR = (48, 245, 120)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 
