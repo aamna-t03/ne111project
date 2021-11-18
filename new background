@@ -12,7 +12,7 @@ WINHEIGHT = 480 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
-GRASSCOLOR = (96, 224, 243)
+TILECOLOR = (96, 224, 243)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 
@@ -26,7 +26,7 @@ INVULNTIME = 2       # how long the player is invulnerable after being hit in se
 GAMEOVERTIME = 4     # how long the "game over" text stays on the screen in seconds
 MAXHEALTH = 3        # how much health the player starts with
 
-NUMGRASS = 1000        # number of grass objects in the active area
+NUMTILE = 1000        # number of grass objects in the active area
 NUMSQUIRRELS = 30    # number of squirrels in the active area
 SQUIRRELMINSPEED = 3 # slowest squirrel speed
 SQUIRRELMAXSPEED = 7 # fastest squirrel speed
@@ -61,7 +61,7 @@ Grass data structure keys:
 """
 
 def main():
-    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_SQUIR_IMG, R_SQUIR_IMG, GRASSIMAGES
+    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_SQUIR_IMG, R_SQUIR_IMG, TILEIMAGES
 
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
@@ -73,9 +73,9 @@ def main():
     # load the image files
     L_SQUIR_IMG = pygame.image.load('squirrel.png')
     R_SQUIR_IMG = pygame.transform.flip(L_SQUIR_IMG, True, False)
-    GRASSIMAGES = []
-    for i in range(1, 5):
-        GRASSIMAGES.append(pygame.image.load('grass%s.png' % i))
+    TILEIMAGES = []
+    for i in range(1, 6):
+        TILEIMAGES.append(pygame.image.load('tile%s.png' % i))
 
     while True:
         runGame()
@@ -106,7 +106,7 @@ def runGame():
     camerax = 0
     cameray = 0
 
-    grassObjs = []    # stores all the grass objects in the game
+    tileObjs = []    # stores all the grass objects in the game
     squirrelObjs = [] # stores all the non-player squirrel objects
     # stores the player object:
     playerObj = {'surface': pygame.transform.scale(L_SQUIR_IMG, (STARTSIZE, STARTSIZE)),
@@ -124,9 +124,9 @@ def runGame():
 
     # start off with some random grass images on the screen
     for i in range(10):
-        grassObjs.append(makeNewGrass(camerax, cameray))
-        grassObjs[i]['x'] = random.randint(0, WINWIDTH)
-        grassObjs[i]['y'] = random.randint(0, WINHEIGHT)
+        tileObjs.append(makeNewTile(camerax, cameray))
+        tileObjs[i]['x'] = random.randint(0, WINWIDTH)
+        tileObjs[i]['y'] = random.randint(0, WINHEIGHT)
 
     while True: # main game loop
         # Check if we should turn off invulnerability
@@ -153,16 +153,16 @@ def runGame():
 
 
         # go through all the objects and see if any need to be deleted.
-        for i in range(len(grassObjs) - 1, -1, -1):
-            if isOutsideActiveArea(camerax, cameray, grassObjs[i]):
-                del grassObjs[i]
+        for i in range(len(tileObjs) - 1, -1, -1):
+            if isOutsideActiveArea(camerax, cameray, tileObjs[i]):
+                del tileObjs[i]
         for i in range(len(squirrelObjs) - 1, -1, -1):
             if isOutsideActiveArea(camerax, cameray, squirrelObjs[i]):
                 del squirrelObjs[i]
 
         # add more grass & squirrels if we don't have enough.
-        while len(grassObjs) < NUMGRASS:
-            grassObjs.append(makeNewGrass(camerax, cameray))
+        while len(tileObjs) < NUMTILE:
+            tileObjs.append(makeNewTile(camerax, cameray))
         while len(squirrelObjs) < NUMSQUIRRELS:
             squirrelObjs.append(makeNewSquirrel(camerax, cameray))
 
@@ -179,15 +179,15 @@ def runGame():
             cameray = playerCentery - CAMERASLACK - HALF_WINHEIGHT
 
         # draw the green background
-        DISPLAYSURF.fill(GRASSCOLOR)
+        DISPLAYSURF.fill(TILECOLOR)
 
         # draw all the grass objects on the screen
-        for gObj in grassObjs:
-            gRect = pygame.Rect( (gObj['x'] - camerax,
-                                  gObj['y'] - cameray,
-                                  gObj['width'],
-                                  gObj['height']) )
-            DISPLAYSURF.blit(GRASSIMAGES[gObj['grassImage']], gRect)
+        for tObj in tileObjs:
+            tRect = pygame.Rect( (tObj['x'] - camerax,
+                                  tObj['y'] - cameray,
+                                  tObj['width'],
+                                  tObj['height']) )
+            DISPLAYSURF.blit(TILEIMAGES[tObj['tileImage']], tRect)
 
 
         # draw the other squirrels
@@ -372,14 +372,14 @@ def makeNewSquirrel(camerax, cameray):
     return sq
 
 
-def makeNewGrass(camerax, cameray):
-    gr = {}
-    gr['grassImage'] = random.randint(0, len(GRASSIMAGES) - 1)
-    gr['width']  = GRASSIMAGES[0].get_width()
-    gr['height'] = GRASSIMAGES[0].get_height()
-    gr['x'], gr['y'] = getRandomOffCameraPos(camerax, cameray, gr['width'], gr['height'])
-    gr['rect'] = pygame.Rect( (gr['x'], gr['y'], gr['width'], gr['height']) )
-    return gr
+def makeNewTile(camerax, cameray):
+    tl = {}
+    tl['tileImage'] = random.randint(0, len(TILEIMAGES) - 1)
+    tl['width']  = TILEIMAGES[0].get_width()
+    tl['height'] = TILEIMAGES[0].get_height()
+    tl['x'], tl['y'] = getRandomOffCameraPos(camerax, cameray, tl['width'], tl['height'])
+    tl['rect'] = pygame.Rect( (tl['x'], tl['y'], tl['width'], tl['height']) )
+    return tl
 
 
 def isOutsideActiveArea(camerax, cameray, obj):
