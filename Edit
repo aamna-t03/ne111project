@@ -22,7 +22,7 @@ HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
 #AT: assigning RGB colour codes for the colour variables, green for the background, white for text and health bar outline, and red for the health bar levels
-GRASSCOLOR = (24, 255, 0)
+GRASSCOLOR = (48, 245, 120)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 
@@ -42,7 +42,7 @@ NUMGRASS = 80        # number of grass objects in the active area
 NUMSQUIRRELS = 30    # number of squirrels in the active area
 NUMBEARS = 1         #number of bears
 NUMFOOD = 10         # number of squirrels in the active area
-NUMHUMAN = 5         # number of humans in the active area 
+NUMHUMAN = 6         # number of humans in the active area 
 SQUIRRELMINSPEED = 3 # slowest squirrel speed
 SQUIRRELMAXSPEED = 7 # fastest squirrel speed
 DIRCHANGEFREQ = 2    # % chance of direction change per frame
@@ -137,7 +137,7 @@ def runGame():
     winRect2.center = (HALF_WINWIDTH, HALF_WINHEIGHT + 30)
     
     winSurf3 = BASICFONT.render("What's that noise?!", True, RED)
-    winRect3 = winSurf3.et_rect()
+    winRect3 = winSurf3.get_rect()
     winRect3.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
 
     # KB: these variables track the game coordiates of the camera
@@ -460,6 +460,42 @@ def runGame():
                         #LK: amount of growth is calculated based off of size of enemy squirrel eaten
                         playerObj['size'] += int( (beObj['width'] * beObj['height'])**0.2 ) + 1
                         del bearObjs[i]
+                        
+                        #LK: using the pygame.transform.scale function, the squirrel image is enlarged accordingly
+                        #LK: returns new squirrel image based off of which way original squirrel image is facing (left or right) 
+                        if playerObj['facing'] == LEFT:
+                            playerObj['surface'] = pygame.transform.scale(L_RJ, (playerObj['size'], playerObj['size']))
+                        if playerObj['facing'] == RIGHT:
+                            playerObj['surface'] = pygame.transform.scale(R_RJ, (playerObj['size'], playerObj['size']))
+
+                        #LK: What happens when player achieves 'Omega Squirrel' size and win conditions
+                        if playerObj['size'] > WINSIZE:
+                            winMode = True # turn on "win mode"
+
+                    #LK: Deffining damage taken during collision with larger enemy squirrel
+                    #LK: if player size is not larger than or equal to enemy squirrel size, the invulnerableMode is not set to True and the player will take damage 
+                    #LK: after damage is taken, invulnerableMode will be set to True for a certain time so that the player does not take unnecessary more than once per hit
+                    #LK: damage results in a loss of one health. The program will set gameOverMode to True if player health is 0
+                    elif not invulnerableMode:
+                        # player is smaller and takes damage
+                        invulnerableMode = True
+                        invulnerableStartTime = time.time()
+                        playerObj['health'] -= 1
+                        if playerObj['health'] == 0:
+                            gameOverMode = True # turn on "game over mode"
+                            gameOverStartTime = time.time()
+
+            for i in range(len(humanObjs)-1, -1, -1):
+                huObj = humanObjs[i]
+                if 'rect' in huObj and playerObj['rect'].colliderect(huObj['rect']):
+                    # a player/squirrel collision has occurred
+
+                    if huObj['width'] * huObj['height'] <= playerObj['size']**2:
+                        # player is larger and eats the squirrel
+                        #LK: checks if player is larger than or equal to size of enemy squirrel and is yes, player eats them
+                        #LK: amount of growth is calculated based off of size of enemy squirrel eaten
+                        playerObj['size'] += int( (huObj['width'] * huObj['height'])**0.2 ) + 1
+                        del humanObjs[i]
            
                         #LK: using the pygame.transform.scale function, the squirrel image is enlarged accordingly
                         #LK: returns new squirrel image based off of which way original squirrel image is facing (left or right) 
@@ -483,8 +519,8 @@ def runGame():
                         playerObj['health'] -= 1
                         if playerObj['health'] == 0:
                             gameOverMode = True # turn on "game over mode"
-                            gameOverStartTime = time.time()        ######                
-                
+                            gameOverStartTime = time.time()
+       
       # LK: how long the "Game Over" text is shown before the new game starts when the player dies 
         else:
             # game is over, show "game over" text
