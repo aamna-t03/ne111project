@@ -137,7 +137,7 @@ def runGame():
     winRect2.center = (HALF_WINWIDTH, HALF_WINHEIGHT + 30)
     
     winSurf3 = BASICFONT.render("What's that noise?!", True, RED)
-    winRect3 = winSurf3.et_rect()
+    winRect3 = winSurf3.get_rect()
     winRect3.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
 
     # KB: these variables track the game coordiates of the camera
