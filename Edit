@@ -51,7 +51,7 @@ RIGHT = 'right'      # setting the right control variable
 #AT: the following is a long string defining terminology that is used throughout the code 
 #AT: side note - the term 'active area' is a bounded area (a HALF_WINWIDTH and HALF_WINHEIGHT) on all sides of the camera view, where objects exist and are created 
 """
-This program has three data structures to represent the player, enemy squirrels, and grass background objects. The data structures are dictionaries with the following keys:
+This program has three data structures to represent the player, enemy humans, food objects, character objects, and grass background objects. The data structures are dictionaries with the following keys:
 
 Keys used by all three data structures:
     'x' - the left edge coordinate of the object in the game world (not a pixel coordinate on the screen)
@@ -80,7 +80,7 @@ Food data structure keys:
 #AT: a function setting up the game's main screen, the icons and images that are used as well as the fonts used for text and an internal timer
 #AT: if this funtion results in true, it will run the game
 def main():
-    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_RJ, R_RJ, GRASSIMAGES, L_SQUIR_IMG, R_SQUIR_IMG, FOOD1, FOOD2, FOOD3, HUMAN, VINCENT
+    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_RJ, R_RJ, GRASSIMAGES, FOOD1, FOOD2, FOOD3, HUMAN, VINCENT
 
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
@@ -88,12 +88,10 @@ def main():
     pygame.display.set_caption('Squirrel Eat Squirrel')
     BASICFONT = pygame.font.Font('freesansbold.ttf', 32)
 
-    # AT: this part of the function also ensures that the squirrel images are oriented upright by using the built in pygame.transform.flip function  
+    # AT: this part of the function also ensures that the all images are oriented upright by using the built in pygame.transform.flip function  
     # load the image files
     L_RJ = pygame.image.load('rj.png')
     R_RJ = pygame.transform.flip(L_RJ, True, False)
-    L_SQUIR_IMG = pygame.image.load('squirrel.png')
-    R_SQUIR_IMG = pygame.transform.flip(L_SQUIR_IMG, True, False)
     VINCENT = pygame.image.load('bear.png')
     FOOD1 = pygame.image.load('food1.png')
     FOOD2 = pygame.image.load('food2.png')
@@ -146,8 +144,7 @@ def runGame():
     cameray = 0
 
     # KB: Tracking the location of objects 
-    # KB: as grass is added to the screen it is added to the list 'grassObjs' 
-    # KB: as enemy squirrels are added to the screen, they are added to the list 'food1Objs'
+    # KB: as grass, food1, food2, food3, humans, and the bear objects are added to the screen they are added to the list '(item)Objs'
     grassObjs = []    # stores all the grass objects in the game
     food1Objs = []    # stores all the non-player food1 objects
     food3Objs = []    # stores all the non-player food3 objects
@@ -187,7 +184,7 @@ def runGame():
         if invulnerableMode and time.time() - invulnerableStartTime > INVULNTIME:
             invulnerableMode = False
 
-        # KB: adjusting the bounce and movement of the food1 
+        # KB: adjusting the bounce and movement of the food1, food2, food3, human, and bear 
         # KB: the smaller the 'movex' and 'movey' values the shorter the squirrel travels each iteration of the game loop 
         for f1Obj in food1Objs:
             # move the squirrel, and adjust for their bounce
@@ -196,9 +193,7 @@ def runGame():
             f1Obj['bounce'] += 1
             if f1Obj['bounce'] > f1Obj['bouncerate']:
                 f1Obj['bounce'] = 0 # reset bounce amount
-                
-        # KB: adjusting the bounce and movement of the food1 
-        # KB: the smaller the 'movex' and 'movey' values the shorter the squirrel travels each iteration of the game loop 
+             
         for f3Obj in food3Objs:
             # move the food3 objects, and adjust for their bounce
             f3Obj['x'] += f3Obj['movex']
@@ -206,9 +201,7 @@ def runGame():
             f3Obj['bounce'] += 1
             if f3Obj['bounce'] > f3Obj['bouncerate']:
                 f3Obj['bounce'] = 0 # reset bounce amount
-                
-        # KB: adjusting the bounce and movement of the food2 
-        # KB: the smaller the 'movex' and 'movey' values the shorter the squirrel travels each iteration of the game loop 
+               
         for f2Obj in food2Objs:
             # move the squirrel, and adjust for their bounce
             f2Obj['x'] += f2Obj['movex']
@@ -216,9 +209,7 @@ def runGame():
             f2Obj['bounce'] += 1
             if f2Obj['bounce'] > f2Obj['bouncerate']:
                 f2Obj['bounce'] = 0 # reset bounce amount
-                
-        # KB: adjusting the bounce and movement of the enemy human
-        # KB: the smaller the 'movex' and 'movey' values the shorter the human travels each iteration of the game loop 
+               
         for hObj in humanObjs:
             # move the human, and adjust for their bounce
             hObj['x'] += hObj['movex']
@@ -227,8 +218,6 @@ def runGame():
             if hObj['bounce'] > hObj['bouncerate']:
                 hObj['bounce'] = 0 # reset bounce amount
                 
-        # HH: adjusting the bounce and movement of the enemy bear
-        # HH: the smaller the 'movex' and 'movey' values the shorter the squirrel travels each iteration of the game loop 
         for bObj in bearObjs:
             # move the bear, and adjust for their bounce
             bObj['x'] += bObj['movex']
@@ -237,11 +226,11 @@ def runGame():
             if bObj['bounce'] > bObj['bouncerate']:
                 bObj['bounce'] = 0 # reset bounce amount
 
-
-            # random chance they change direction
-            # KB: the enemy squirrels move with random change of directions 
+            # random change of direction
+            # KB: the foos1, food2, food3, humans, and bear move with random change of directions 
             # KB: 'DIRCHANGEFREQ' is set to 2 from previous code and 'random.randint(0, 99)' will select a random value in the interval 0 to 99
             # KB: therefore if the value of 'random.randint(0, 99) is less than 2, then the f1Obj will get assigned random velocities
+            
             if random.randint(0, 99) < DIRCHANGEFREQ:
                 f1Obj['movex'] = getRandomVelocity()
                 f1Obj['movey'] = getRandomVelocity()
@@ -249,11 +238,7 @@ def runGame():
                     f1Obj['surface'] = pygame.transform.scale(FOOD1, (f1Obj['width'], f1Obj['height']))
                 else: # faces left
                     f1Obj['surface'] = pygame.transform.scale(FOOD1, (f1Obj['width'], f1Obj['height']))
-                    
-            # random chance they change direction
-            # KB: the enemy squirrels move with random change of directions 
-            # KB: 'DIRCHANGEFREQ' is set to 2 from previous code and 'random.randint(0, 99)' will select a random value in the interval 0 to 99
-            # KB: therefore if the value of 'random.randint(0, 99) is less than 2, then the f2Obj will get assigned random velocities
+   
             if random.randint(0, 99) < DIRCHANGEFREQ:
                 f2Obj['movex'] = getRandomVelocity()
                 f2Obj['movey'] = getRandomVelocity()
@@ -262,9 +247,6 @@ def runGame():
                 else: # faces left
                     f2Obj['surface'] = pygame.transform.scale(FOOD2, (f2Obj['width'], f2Obj['height']))
             
-            # KB: the enemy squirrels move with random change of directions 
-            # KB: 'DIRCHANGEFREQ' is set to 2 from previous code and 'random.randint(0, 99)' will select a random value in the interval 0 to 99
-            # KB: therefore if the value of 'random.randint(0, 99) is less than 2, then the f1Obj will get assigned random velocities
             if random.randint(0, 99) < DIRCHANGEFREQ:
                 f3Obj['movex'] = getRandomVelocity()
                 f3Obj['movey'] = getRandomVelocity()
@@ -273,9 +255,6 @@ def runGame():
                 else: # faces left
                     f3Obj['surface'] = pygame.transform.scale(FOOD3, (f3Obj['width'], f3Obj['height']))
             
-            # KB: the enemy human move with random change of directions 
-            # KB: 'DIRCHANGEFREQ' is set to 2 from previous code and 'random.randint(0, 99)' will select a random value in the interval 0 to 99
-            # KB: therefore if the value of 'random.randint(0, 99) is less than 2, then the hObj will get assigned random velocities
             if random.randint(0, 99) < DIRCHANGEFREQ:
                 hObj['movex'] = getRandomVelocity()
                 hObj['movey'] = getRandomVelocity()
@@ -284,9 +263,6 @@ def runGame():
                 else: # faces left
                     hObj['surface'] = pygame.transform.scale(HUMAN, (hObj['width'], hObj['height']))
                     
-            # HH: the enemy bear moves with random change of directions 
-            # HH: 'DIRCHANGEFREQ' is set to 2 from previous code and 'random.randint(0, 99)' will select a random value in the interval 0 to 99
-            # HH: therefore if the value of 'random.randint(0, 99) is less than 2, then the hObj will get assigned random velocities
             if random.randint(0, 99) < DIRCHANGEFREQ:
                 bObj['movex'] = 20
                 bObj['movey'] = 20
@@ -320,8 +296,8 @@ def runGame():
 
         # add more grass & squirrels if we don't have enough.
         # KB: based on predetermined limits of grass (NUMGRASS) and squirrels (NUMFOOD) 
-        # KB: if the length of the 'grassObj' list drops below 'NUMGRASS', more grass objects are added, and
-        # KB: if the length of the 'squirrelObj' list goes below 'NUMFOOD', more squirrels are created 
+        # KB: if the length of the 'grassObj' list drops below 'NUMGRASS',or 'food1Obj', 'food2Obj' or 'food3Obj' list goes below 'NUMFOOD',
+        #KB: or 'humanObj' goes below 'NUMHUMAN', more of the objects are added to the the respective lists 
         while len(grassObjs) < NUMGRASS:
             grassObjs.append(makeNewGrass(camerax, cameray))
         while len(food1Objs) < NUMFOOD:
@@ -480,9 +456,9 @@ def runGame():
                 playerObj['bounce'] = 0 # reset bounce amount
 
             #LK:
-            #LK: Defining player collisions with enemy squirrels
-            # check if the player has collided with any squirrels
-            #LK: will start from the last index of food1Objs in order to prevent loop from deleting eaten food 1 objects
+            #LK: Defining player collisions with any object (food1, food2, food3, and human)
+            # check if the player has collided with any object
+            #LK: will start from the last index of food1Objs, food2Objs, food3Objs and humans in order to prevent loop from deleting eaten food and human objects
             
             for i in range(len(food1Objs)-1, -1, -1):
                 sqObj = food1Objs[i]
@@ -491,8 +467,8 @@ def runGame():
 
                     if sqObj['width'] * sqObj['height'] <= playerObj['size']**2:
                         # player is larger and eats the squirrel
-                        #LK: checks if player is larger than or equal to size of enemy squirrel and is yes, player eats them
-                        #LK: amount of growth is calculated based off of size of enemy squirrel eaten
+                        #LK: checks if player is larger than or equal to size of food1 and is yes, player eats them
+                        #LK: amount of growth is calculated based off of size of food1 eaten
                         playerObj['size'] += int( (sqObj['width'] * sqObj['height'])**0.2 ) + 1
                         del food1Objs[i]
            
@@ -507,8 +483,8 @@ def runGame():
                         if playerObj['size'] > WINSIZE:
                             winMode = True # turn on "win mode"
 
-                    #LK: Deffining damage taken during collision with larger enemy squirrel
-                    #LK: if player size is not larger than or equal to enemy squirrel size, the invulnerableMode is not set to True and the player will take damage 
+                    #LK: Deffining damage taken during collision with larger food1 object 
+                    #LK: if player size is not larger than or equal to food1 object, the invulnerableMode is not set to True and the player will take damage 
                     #LK: after damage is taken, invulnerableMode will be set to True for a certain time so that the player does not take unnecessary more than once per hit
                     #LK: damage results in a loss of one health. The program will set gameOverMode to True if player health is 0
                     elif not invulnerableMode:
@@ -526,7 +502,7 @@ def runGame():
                     # a player/food3 collision has occurred
 
                     if fdObj['width'] * fdObj['height'] <= playerObj['size']**2:
-                        # player is larger and eats the squirrel
+                        # player is larger and eats food3
                         #LK: checks if player is larger than or equal to size of food3 and is yes, player eats them
                         #LK: amount of growth is calculated based off of size of food eaten
                         playerObj['size'] += int( (fdObj['width'] * fdObj['height'])**0.2 ) + 1
@@ -543,8 +519,8 @@ def runGame():
                         if playerObj['size'] > WINSIZE:
                             winMode = True # turn on "win mode"
 
-                    #LK: Deffining damage taken during collision with larger enemy squirrel
-                    #LK: if player size is not larger than or equal to enemy squirrel size, the invulnerableMode is not set to True and the player will take damage 
+                    #LK: Deffining damage taken during collision with larger food3 object 
+                    #LK: if player size is not larger than or equal to food3, the invulnerableMode is not set to True and the player will take damage 
                     #LK: after damage is taken, invulnerableMode will be set to True for a certain time so that the player does not take unnecessary more than once per hit
                     #LK: damage results in a loss of one health. The program will set gameOverMode to True if player health is 0
                     elif not invulnerableMode:
@@ -562,9 +538,9 @@ def runGame():
                     # a player/squirrel collision has occurred
 
                     if sqObj['width'] * sqObj['height'] <= playerObj['size']**2:
-                        # player is larger and eats the squirrel
-                        #LK: checks if player is larger than or equal to size of enemy squirrel and is yes, player eats them
-                        #LK: amount of growth is calculated based off of size of enemy squirrel eaten
+                        # player is larger and eats food2
+                        #LK: checks if player is larger than or equal to size of food2 and is yes, player eats them
+                        #LK: amount of growth is calculated based off of size of food2 eaten
                         playerObj['size'] += int( (sqObj['width'] * sqObj['height'])**0.2 ) + 1
                         del food2Objs[i]
            
@@ -579,8 +555,8 @@ def runGame():
                         if playerObj['size'] > WINSIZE:
                             winMode = True # turn on "win mode"
 
-                    #LK: Deffining damage taken during collision with larger enemy squirrel
-                    #LK: if player size is not larger than or equal to enemy squirrel size, the invulnerableMode is not set to True and the player will take damage 
+                    #LK: Deffining damage taken during collision with larger food2 object 
+                    #LK: if player size is not larger than or equal to food2 , the invulnerableMode is not set to True and the player will take damage 
                     #LK: after damage is taken, invulnerableMode will be set to True for a certain time so that the player does not take unnecessary more than once per hit
                     #LK: damage results in a loss of one health. The program will set gameOverMode to True if player health is 0
                     elif not invulnerableMode:
@@ -599,8 +575,8 @@ def runGame():
 
                     if beObj['width'] * beObj['height'] <= playerObj['size']**2:
                         # player is larger and eats the bear
-                        #LK: checks if player is larger than or equal to size of enemy squirrel and is yes, player eats them
-                        #LK: amount of growth is calculated based off of size of enemy squirrel eaten
+                        #LK: checks if player is larger than or equal to size of bear and is yes, player eats them
+                        #LK: amount of growth is calculated based off of size of bear eaten
                         playerObj['size'] += int( (beObj['width'] * beObj['height'])**0.2 ) + 1
                         del bearObjs[i]
                         
@@ -615,8 +591,8 @@ def runGame():
                         if playerObj['size'] > WINSIZE:
                             winMode = True # turn on "win mode"
 
-                    #LK: Deffining damage taken during collision with larger enemy squirrel
-                    #LK: if player size is not larger than or equal to enemy squirrel size, the invulnerableMode is not set to True and the player will take damage 
+                    #LK: Deffining damage taken during collision with larger bear
+                    #LK: if player size is not larger than or equal to bear, the invulnerableMode is not set to True and the player will take damage 
                     #LK: after damage is taken, invulnerableMode will be set to True for a certain time so that the player does not take unnecessary more than once per hit
                     #LK: damage results in a loss of one health. The program will set gameOverMode to True if player health is 0
                     elif not invulnerableMode:
@@ -635,8 +611,10 @@ def runGame():
 
                     if huObj['width'] * huObj['height'] <= playerObj['size']**2:
                         # player is larger and eats the human
-                        #LK: checks if player is larger than or equal to size of enemy human and if yes, player eats them
-                        #LK: amount of growth is calculated based off of size of enemy squirrel eaten
+
+                        #LK: checks if player is larger than or equal to size of human and is yes, player eats them
+                        #LK: amount of growth is calculated based off of size of human eaten
+
                         playerObj['size'] += int( (huObj['width'] * huObj['height'])**0.2 ) + 1
                         del humanObjs[i]
            
