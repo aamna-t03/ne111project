@@ -42,8 +42,8 @@ NUMGRASS = 80        # number of grass objects in the active area
 NUMBEARS = 1         #number of bears
 NUMFOOD = 10         # number of squirrels in the active area
 NUMHUMAN = 6         # number of humans in the active area 
-SQUIRRELMINSPEED = 3 # slowest squirrel speed
-SQUIRRELMAXSPEED = 7 # fastest squirrel speed
+OBJECTMINSPEED = 3 # slowest object speed
+OBJECTMAXSPEED = 7 # fastest object speed
 DIRCHANGEFREQ = 2    # % chance of direction change per frame
 LEFT = 'left'        # setting the left control variable 
 RIGHT = 'right'      # setting the right control variable 
@@ -611,13 +611,15 @@ def runGame():
 
                     if huObj['width'] * huObj['height'] <= playerObj['size']**2:
                         # player is larger and eats the human
+
                         #LK: checks if player is larger than or equal to size of human and is yes, player eats them
                         #LK: amount of growth is calculated based off of size of human eaten
+
                         playerObj['size'] += int( (huObj['width'] * huObj['height'])**0.2 ) + 1
                         del humanObjs[i]
            
-                        #LK: using the pygame.transform.scale function, the squirrel image is enlarged accordingly
-                        #LK: returns new squirrel image based off of which way original squirrel image is facing (left or right) 
+                        #LK: using the pygame.transform.scale function, the player, RJ, image is enlarged accordingly
+                        #LK: returns new player image based off of which way original player image is facing (left or right) 
                         if playerObj['facing'] == LEFT:
                             playerObj['surface'] = pygame.transform.scale(L_RJ, (playerObj['size'], playerObj['size']))
                         if playerObj['facing'] == RIGHT:
@@ -646,9 +648,9 @@ def runGame():
             DISPLAYSURF.blit(gameOverSurf, gameOverRect)
             if time.time() - gameOverStartTime > GAMEOVERTIME:
                 return # end the current game
-        #LK: how long the "You have achieved OMEGA SQUIRREL!" and "Press 'r' to restart" text are shown on screen when the player wins
+                
+        #LK: how long the win statment and "Press 'r' to restart" text are shown on screen when the player wins
         #LK: when the player presses 'r' key, the game will stop running and the program execution will return from rungame.() 
-
         # check if the player has won.
         if winMode:
             DISPLAYSURF.blit(winSurf, winRect)
@@ -688,10 +690,10 @@ def getBounceAmount(currentBounce, bounceRate, bounceHeight):
     # currentBounce will always be less than bounceRate
     return int(math.sin( (math.pi / float(bounceRate)) * currentBounce ) * bounceHeight)
 
-#LK: defining randomized enemy squirrel speeds and directions
+#LK: defining randomized object speeds and directions
 #LK: positive value corresponds to right or down, and negative value corresponds to left or up
 def getRandomVelocity():
-    speed = random.randint(SQUIRRELMINSPEED, SQUIRRELMAXSPEED)
+    speed = random.randint(OBJECTMINSPEED, OBJECTMAXSPEED)
     if random.randint(0, 1) == 0:
         return speed
     else:
@@ -714,8 +716,9 @@ def getRandomOffCameraPos(camerax, cameray, objWidth, objHeight):
             return x, y
 
 
-#LK: creating new food1 inside the active area outside the camera view 
-#LK: defining general food1 size and deviation range as well as speed
+#LK: creating new food1, food2, food3, enemy humans, and the bear inside the active area outside the camera view 
+#LK: defining the size, deviation range, and speed for food1, food2, food3, humans, and the bear
+
 def makeNewFood1(camerax, cameray):
     fd = {}
     generalSize = random.randint(10, 20)
@@ -734,9 +737,7 @@ def makeNewFood1(camerax, cameray):
     fd['bouncerate'] = random.randint(10, 18)
     fd['bounceheight'] = random.randint(10, 50)
     return fd
-    
-#LK: creating new enemy squirrels inside the active area outside the camera view 
-#LK: defining general squirrel size and deviation range as well as speed
+
 def makeNewFood2(camerax, cameray):
     fd = {}
     generalSize = random.randint(10, 20)
@@ -756,8 +757,6 @@ def makeNewFood2(camerax, cameray):
     fd['bounceheight'] = random.randint(10, 50)
     return fd
 
-#LK: creating new food1 inside the active area outside the camera view 
-#LK: defining general food1 size and deviation range as well as speed
 def makeNewFood3(camerax, cameray):
     fd = {}
     generalSize = random.randint(10, 20)
@@ -777,8 +776,6 @@ def makeNewFood3(camerax, cameray):
     fd['bounceheight'] = random.randint(10, 50)
     return fd
 
-#LK: creating new enemy humans inside the active area outside the camera view 
-#LK: defining general human size and deviation range as well as speed
 def makeNewHuman(camerax, cameray):
     h = {}
     generalSize = random.randint(100, 125)
@@ -797,9 +794,7 @@ def makeNewHuman(camerax, cameray):
     h['bouncerate'] = random.randint(10, 18)
     h['bounceheight'] = random.randint(10, 50)
     return h
-
-#LK: creating new enemy squirrels inside the active area outside the camera view 
-#LK: defining general squirrel size and deviation range as well as speed
+    
 def makeNewBear(camerax, cameray):
     fd = {}
     generalSize = 200
