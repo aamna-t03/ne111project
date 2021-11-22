@@ -151,6 +151,7 @@ def runGame():
     # KB: as enemy squirrels are added to the screen, they are added to the list 'food1Objs'
     grassObjs = []    # stores all the grass objects in the game
     food1Objs = []    # stores all the non-player squirrel objects
+    food2Objs = []    # stores all the food 2 objects 
     humanObjs = []    # stores all the human objects
     bearObjs = []     # stores the bear object
     
@@ -195,6 +196,16 @@ def runGame():
             if f1Obj['bounce'] > f1Obj['bouncerate']:
                 f1Obj['bounce'] = 0 # reset bounce amount
                 
+        # KB: adjusting the bounce and movement of the food2 
+        # KB: the smaller the 'movex' and 'movey' values the shorter the squirrel travels each iteration of the game loop 
+        for f2Obj in food2Objs:
+            # move the squirrel, and adjust for their bounce
+            f2Obj['x'] += f2Obj['movex']
+            f2Obj['y'] += f2Obj['movey']
+            f2Obj['bounce'] += 1
+            if f2Obj['bounce'] > f2Obj['bouncerate']:
+                f2Obj['bounce'] = 0 # reset bounce amount
+                
         # KB: adjusting the bounce and movement of the enemy human
         # KB: the smaller the 'movex' and 'movey' values the shorter the human travels each iteration of the game loop 
         for hObj in humanObjs:
@@ -227,6 +238,18 @@ def runGame():
                     f1Obj['surface'] = pygame.transform.scale(FOOD1, (f1Obj['width'], f1Obj['height']))
                 else: # faces left
                     f1Obj['surface'] = pygame.transform.scale(FOOD1, (f1Obj['width'], f1Obj['height']))
+                    
+            # random chance they change direction
+            # KB: the enemy squirrels move with random change of directions 
+            # KB: 'DIRCHANGEFREQ' is set to 2 from previous code and 'random.randint(0, 99)' will select a random value in the interval 0 to 99
+            # KB: therefore if the value of 'random.randint(0, 99) is less than 2, then the f2Obj will get assigned random velocities
+            if random.randint(0, 99) < DIRCHANGEFREQ:
+                f2Obj['movex'] = getRandomVelocity()
+                f2Obj['movey'] = getRandomVelocity()
+                if f2Obj['movex'] > 0: # faces right
+                    f2Obj['surface'] = pygame.transform.scale(FOOD2, (f2Obj['width'], f2Obj['height']))
+                else: # faces left
+                    f2Obj['surface'] = pygame.transform.scale(FOOD2, (f2Obj['width'], f2Obj['height']))
             
             # KB: the enemy human move with random change of directions 
             # KB: 'DIRCHANGEFREQ' is set to 2 from previous code and 'random.randint(0, 99)' will select a random value in the interval 0 to 99
@@ -265,7 +288,10 @@ def runGame():
         for i in range(len(bearObjs) - 1, -1, -1):
             if isOutsideActiveArea(camerax, cameray, bearObjs[i]):
                 del bearObjs[i]
-
+        for i in range(len(food2Objs) - 1, -1, -1):
+            if isOutsideActiveArea(camerax, cameray, food2Objs[i]):
+                del food2Objs[i]
+  
 
         # add more grass & squirrels if we don't have enough.
         # KB: based on predetermined limits of grass (NUMGRASS) and squirrels (NUMFOOD) 
@@ -275,6 +301,8 @@ def runGame():
             grassObjs.append(makeNewGrass(camerax, cameray))
         while len(food1Objs) < NUMFOOD:
             food1Objs.append(makeNewFood1(camerax, cameray))
+        while len(food2Objs) < NUMFOOD:
+            food2Objs.append(makeNewFood2(camerax, cameray))
         while len(humanObjs) < NUMHUMAN:
             humanObjs.append(makeNewHuman(camerax, cameray))
 
@@ -316,6 +344,12 @@ def runGame():
                                          f1Obj['width'],
                                          f1Obj['height']) )
             DISPLAYSURF.blit(f1Obj['surface'], f1Obj['rect'])
+        for f2Obj in food2Objs:
+            f2Obj['rect'] = pygame.Rect( (f2Obj['x'] - camerax,
+                                         f2Obj['y'] - cameray - getBounceAmount(f2Obj['bounce'], f2Obj['bouncerate'], f2Obj['bounceheight']),
+                                         f2Obj['width'],
+                                         f2Obj['height']) )
+            DISPLAYSURF.blit(f2Obj['surface'], f2Obj['rect'])
         for hObj in humanObjs:
             hObj['rect'] = pygame.Rect( (hObj['x'] - camerax,
                                          hObj['y'] - cameray - getBounceAmount(hObj['bounce'], hObj['bouncerate'], hObj['bounceheight']),
@@ -449,6 +483,42 @@ def runGame():
                             gameOverMode = True # turn on "game over mode"
                             gameOverStartTime = time.time()
             
+            for i in range(len(food2Objs)-1, -1, -1):
+                sqObj = food2Objs[i]
+                if 'rect' in sqObj and playerObj['rect'].colliderect(sqObj['rect']):
+                    # a player/squirrel collision has occurred
+
+                    if sqObj['width'] * sqObj['height'] <= playerObj['size']**2:
+                        # player is larger and eats the squirrel
+                        #LK: checks if player is larger than or equal to size of enemy squirrel and is yes, player eats them
+                        #LK: amount of growth is calculated based off of size of enemy squirrel eaten
+                        playerObj['size'] += int( (sqObj['width'] * sqObj['height'])**0.2 ) + 1
+                        del food2Objs[i]
+           
+                        #LK: using the pygame.transform.scale function, the squirrel image is enlarged accordingly
+                        #LK: returns new squirrel image based off of which way original squirrel image is facing (left or right) 
+                        if playerObj['facing'] == LEFT:
+                            playerObj['surface'] = pygame.transform.scale(L_RJ, (playerObj['size'], playerObj['size']))
+                        if playerObj['facing'] == RIGHT:
+                            playerObj['surface'] = pygame.transform.scale(R_RJ, (playerObj['size'], playerObj['size']))
+
+                        #LK: What happens when player achieves 'Omega Squirrel' size and win conditions
+                        if playerObj['size'] > WINSIZE:
+                            winMode = True # turn on "win mode"
+
+                    #LK: Deffining damage taken during collision with larger enemy squirrel
+                    #LK: if player size is not larger than or equal to enemy squirrel size, the invulnerableMode is not set to True and the player will take damage 
+                    #LK: after damage is taken, invulnerableMode will be set to True for a certain time so that the player does not take unnecessary more than once per hit
+                    #LK: damage results in a loss of one health. The program will set gameOverMode to True if player health is 0
+                    elif not invulnerableMode:
+                        # player is smaller and takes damage
+                        invulnerableMode = True
+                        invulnerableStartTime = time.time()
+                        playerObj['health'] -= 1
+                        if playerObj['health'] == 0:
+                            gameOverMode = True # turn on "game over mode"
+                            gameOverStartTime = time.time()
+                            
             for i in range(len(bearObjs)-1, -1, -1):
                 beObj = bearObjs[i]
                 if 'rect' in beObj and playerObj['rect'].colliderect(sqObj['rect']):
@@ -611,6 +681,27 @@ def makeNewFood1(camerax, cameray):
         fd['surface'] = pygame.transform.scale(FOOD1, (fd['width'], fd['height']))
     else: # squirrel is facing right
         fd['surface'] = pygame.transform.scale(FOOD1, (fd['width'], fd['height']))
+    fd['bounce'] = 0
+    fd['bouncerate'] = random.randint(10, 18)
+    fd['bounceheight'] = random.randint(10, 50)
+    return fd
+    
+#LK: creating new enemy squirrels inside the active area outside the camera view 
+#LK: defining general squirrel size and deviation range as well as speed
+def makeNewFood2(camerax, cameray):
+    fd = {}
+    generalSize = random.randint(10, 20)
+    fd['width']  = (generalSize + random.randint(0, 10))
+    fd['height'] = (generalSize + random.randint(0, 10))
+    fd['x'], fd['y'] = getRandomOffCameraPos(camerax, cameray, fd['width'], fd['height'])
+    fd['movex'] = getRandomVelocity()
+    fd['movey'] = getRandomVelocity()
+    #LK: create mirrored image of squirrel using previously defined size 
+    #LK: this is used for when the squirrel changes direction and must be mirrored
+    if fd['movex'] < 0: # squirrel is facing left
+        fd['surface'] = pygame.transform.scale(FOOD2, (fd['width'], fd['height']))
+    else: # squirrel is facing right
+        fd['surface'] = pygame.transform.scale(FOOD2, (fd['width'], fd['height']))
     fd['bounce'] = 0
     fd['bouncerate'] = random.randint(10, 18)
     fd['bounceheight'] = random.randint(10, 50)
