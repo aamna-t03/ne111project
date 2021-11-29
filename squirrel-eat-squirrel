@@ -214,7 +214,8 @@ def runGame():
 
         # adjust camerax and cameray if beyond the "camera slack"
         # KB: 'CAMERASLACK' is predetermined in the code to 90 pixels
-        # KB: this part of the code adjusts the camera location when the playerObj is more than 90 pixels from the center of the screen 
+        # KB: this part of the code adjusts the camera location when the playerObj 
+        # KB: is more than 90 pixels from the center of the screen 
         playerCenterx = playerObj['x'] + int(playerObj['size'] / 2)
         playerCentery = playerObj['y'] + int(playerObj['size'] / 2)
         if (camerax + HALF_WINWIDTH) - playerCenterx > CAMERASLACK:
