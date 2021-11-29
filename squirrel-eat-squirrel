@@ -314,7 +314,8 @@ def runGame():
                 elif event.key == K_ESCAPE:
                     terminate()
                     
-        # HH: with the moveRight and moveLeft variables assigned, these statments actually move the player on screen as well as how the player bounces as they move 
+        # HH: with the moveRight and moveLeft variables assigned, 
+        # these statments actually move the player on screen as well as how the player bounces as they move 
         if not gameOverMode:
             # actually move the player
             if moveLeft:
@@ -360,8 +361,10 @@ def runGame():
                             winMode = True # turn on "win mode"
 
                     # LK: Deffining damage taken during collision with larger enemy squirrel
-                    # LK: if player size is not larger than or equal to enemy squirrel size, the invulnerableMode is not set to True and the player will take damage 
-                    # LK: after damage is taken, invulnerableMode will be set to True for a certain time so that the player does not take unnecessary more than once per hit
+                    # LK: if player size is not larger than or equal to enemy squirrel size, 
+                    # the invulnerableMode is not set to True and the player will take damage 
+                    # LK: after damage is taken, invulnerableMode will be set to True for a certain 
+                    # time so that the player does not take unnecessary more than once per hit
                     # LK: damage results in a loss of one health. The program will set gameOverMode to True if player health is 0
                     elif not invulnerableMode:
                         # player is smaller and takes damage
