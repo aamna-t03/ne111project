@@ -254,9 +254,11 @@ def runGame():
 
         # draw the player squirrel
         # HH: Determine properties and position of the player squirrel
-        # AT: if the player squirrel is damaged, it flashes to indicate the injury to its health. The flash effect is done by having the squirrel appear and dissapear every tenth of a second
+        # AT: if the player squirrel is damaged, it flashes to indicate the injury to its health. 
+        # The flash effect is done by having the squirrel appear and dissapear every tenth of a second
         # AT: the flashing continues for as long as invulnerable mode is on, which has already been established to be 2 seconds
-        # AT: FlashIsOn is pulls the current time and rounds the game time to 1 digit, multiplying by 10, divinding by 2 and checking if the remainder is equal to 1, if this is true, it will continue flashing 
+        # AT: FlashIsOn is pulls the current time and rounds the game time to 1 digit, multiplying by 10, 
+        # divinding by 2 and checking if the remainder is equal to 1, if this is true, it will continue flashing 
         flashIsOn = round(time.time(), 1) * 10 % 2 == 1
         if not gameOverMode and not (invulnerableMode and flashIsOn):
             playerObj['rect'] = pygame.Rect( (playerObj['x'] - camerax,
