@@ -31,8 +31,8 @@ CAMERASLACK = 90     # how far from the center the squirrel moves before moving 
 MOVERATE = 9         # how fast the player moves
 BOUNCERATE = 6       # how fast the player bounces (large is slower)
 BOUNCEHEIGHT = 30    # how high the player bounces
-STARTSIZE = 25       # how big the player starts off
-WINSIZE = 100        # how big the player needs to be to win
+STARTSIZE = 35       # how big the player starts off
+WINSIZE = 110        # how big the player needs to be to win
 INVULNTIME = 2       # how long the player is invulnerable after being hit in seconds
 GAMEOVERTIME = 4     # how long the "game over" text stays on the screen in seconds
 WINTIME = 4          # how long the winSurf messages stay on the screen in seconds 
@@ -806,7 +806,7 @@ def makeNewFood3(camerax, cameray):
 #LK: defining general human size and deviation range as well as speed
 def makeNewHuman(camerax, cameray):
     h = {}
-    generalSize = random.randint(100, 125)
+    generalSize = random.randint(125, 135)
     h['width']  = (generalSize + random.randint(0, 10))
     h['height'] = (generalSize + random.randint(0, 10))
     h['x'], h['y'] = getRandomOffCameraPos(camerax, cameray, h['width'], h['height'])
