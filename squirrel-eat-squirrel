@@ -9,24 +9,27 @@
 # http://inventwithpython.com/pygame
 # Released under a "Simplified BSD" license
 
-#AT
-#AT: the modules random, sys, time, math and pygame are being imported 
+# AT
+# AT: the modules random, sys, time, math and pygame are being imported 
 import random, sys, time, math, pygame 
 from pygame.locals import *
 
-#AT: the dimensions of the playing screen are defined as well as the speed of the animation. All these variables are constant values 
+# AT: the dimensions of the playing screen are defined,
+# AT: as well as the speed of the animation. All these variables are constant values 
 FPS = 30 # frames per second to update the screen
 WINWIDTH = 640 # width of the program's window, in pixels
 WINHEIGHT = 480 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
-#AT: assigning RGB colour codes for the colour variables, green for the background, white for text and health bar outline, and red for the health bar levels
+# AT: assigning RGB colour codes for the colour variables, green for the background, 
+# AT: white for text and health bar outline, and red for the health bar levels
 GRASSCOLOR = (24, 255, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 
-#AT: assigning numerical values for various allowed movements in the game, limits for the players health bar, and in seconds, how long certain events last
+# AT: assigning numerical values for various allowed movements in the game, 
+# AT: limits for the players health bar, and in seconds, how long certain events last
 CAMERASLACK = 90     # how far from the center the squirrel moves before moving the camera
 MOVERATE = 9         # how fast the player moves
 BOUNCERATE = 6       # how fast the player bounces (large is slower)
@@ -46,8 +49,9 @@ DIRCHANGEFREQ = 2    # % chance of direction change per frame
 LEFT = 'left'        # setting the left control variable 
 RIGHT = 'right'      # setting the right control variable 
 
-#AT: the following is a long string defining terminology that is used throughout the code 
-#AT: side note - the term 'active area' is a bounded area (a HALF_WINWIDTH and HALF_WINHEIGHT) on all sides of the camera view, where objects exist and are created 
+# AT: the following is a long string defining terminology that is used throughout the code 
+# AT: side note - the term 'active area' is a bounded area (a HALF_WINWIDTH and HALF_WINHEIGHT) 
+# AT: on all sides of the camera view, where objects exist and are created 
 """
 This program has three data structures to represent the player, enemy squirrels, and grass background objects. The data structures are dictionaries with the following keys:
 
