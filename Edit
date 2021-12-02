@@ -681,7 +681,7 @@ def runGame():
                     DISPLAYSURF.fill(BLACK)
             DISPLAYSURF.blit(winSurf, winRect)
             #time.sleep(2)
-            #DISPLAYSURF.blit(winSurf3, winRect3)
+            DISPLAYSURF.blit(winSurf3, winRect2)
             #time.sleep(3)
             humanObjs = []
             food1Objs = []
@@ -691,7 +691,7 @@ def runGame():
             while len(bearObjs) < NUMBEARS:
                 bearObjs.append(makeNewBear(camerax, cameray))
                 
-            DISPLAYSURF.blit(winSurf2, winRect2)
+           #DISPLAYSURF.blit(winSurf2, winRect2)
 
 
         pygame.display.update()
