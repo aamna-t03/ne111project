@@ -813,7 +813,7 @@ def makeNewFood3(camerax, cameray):
 #LK: defining general human size and deviation range as well as speed
 def makeNewHuman(camerax, cameray):
     h = {}
-    generalSize = random.randint(100, 125)
+    generalSize = random.randint(110, 135)
     h['width']  = (generalSize + random.randint(0, 10))
     h['height'] = (generalSize + random.randint(0, 10))
     h['x'], h['y'] = getRandomOffCameraPos(camerax, cameray, h['width'], h['height'])
