@@ -137,7 +137,7 @@ def runGame():
     
     winSurf3 = BASICFONT.render("What's that noise?!", True, RED)
     winRect3 = winSurf3.get_rect()
-    winRect3.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
+    winRect3.center = (HALF_WINWIDTH, HALF_WINHEIGHT + 60)
 
     # KB: these variables track the game coordiates of the camera
     # KB: this is stating the camera location starts at the gameworld origin
@@ -679,20 +679,16 @@ def runGame():
             invulnerableMode = False
             if playerObj['health'] <= 0:
                     DISPLAYSURF.fill(BLACK)
+                    DISPLAYSURF.blit(winSurf2, winRect3)
             DISPLAYSURF.blit(winSurf, winRect)
-            #time.sleep(2)
             DISPLAYSURF.blit(winSurf3, winRect2)
-            #time.sleep(3)
             humanObjs = []
             food1Objs = []
             food2Objs = []
             food3Objs = []
-            #GRASSIMAGES = []
             while len(bearObjs) < NUMBEARS:
                 bearObjs.append(makeNewBear(camerax, cameray))
-                
-           #DISPLAYSURF.blit(winSurf2, winRect2)
-
+               
 
         pygame.display.update()
         FPSCLOCK.tick(FPS)
