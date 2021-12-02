@@ -291,7 +291,7 @@ def runGame():
                 bObj['movex'] = 20
                 bObj['movey'] = 20
                 if bObj['movex'] > 0: # faces right
-                    bObj['surface'] = pygame.transform.scale(R_VINCENT, (bObj['width'], bObj['height']))
+                    bObj['surface'] = pygame.transform.scale(VINCENT, (bObj['width'], bObj['height']))
                 else: # faces left
                     bObj['surface'] = pygame.transform.scale(VINCENT, (bObj['width'], bObj['height']))
           
@@ -838,7 +838,7 @@ def makeNewHuman(camerax, cameray):
 #LK: defining general squirrel size and deviation range as well as speed
 def makeNewBear(camerax, cameray):
     fd = {}
-    generalSize = 400
+    generalSize = 500
     fd['width']  = generalSize
     fd['height'] = generalSize
     fd['x'], fd['y'] = getRandomOffCameraPos(camerax, cameray, fd['width'], fd['height'])
