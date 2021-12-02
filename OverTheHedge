@@ -42,7 +42,7 @@ TimewinMode = 5
 #AT: defining the number of objects in the active area and setting statistics for the objects 
 NUMGRASS = 80        # number of grass objects in the active area
 NUMBEARS = 1         #number of bears
-NUMFOOD = 10         # number of food objects in the active area
+NUMFOOD = 10         # number of squirrels in the active area
 NUMHUMAN = 6         # number of humans in the active area 
 SQUIRRELMINSPEED = 3 # slowest squirrel speed
 SQUIRRELMAXSPEED = 7 # fastest squirrel speed
@@ -677,21 +677,12 @@ def runGame():
 
         # check if the player has won.
         if winMode:
-            timer = 0
             DISPLAYSURF.blit(winSurf, winRect)
-            elapsed = FPSCLOCK.tick(FPS)
-            timer = timer + elapsed/1000
-            if timer > TimewinMode:
-                winMode = False
-            #DISPLAYSURF.blit(winSurf3, winRect3)
-            #time.sleep(3)
-            #bearObjs.append(makeNewBear(camerax, cameray))
-            DISPLAYSURF.blit(winSurf2, winRect2)
+            DISPLAYSURF.blit(winSurf3, winRect2)
+            #DISPLAYSURF.blit(winSurf2, winRect2)
 
         pygame.display.update()
         FPSCLOCK.tick(FPS)
-
-
 
 
 #LK: defining health meter display
