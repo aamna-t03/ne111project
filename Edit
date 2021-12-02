@@ -25,6 +25,7 @@ HALF_WINHEIGHT = int(WINHEIGHT / 2)
 GRASSCOLOR = (48, 245, 120)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
+BLACK = (0, 0, 0)
 
 #AT: assigning numerical values for various allowed movements in the game, limits for the players health bar, and in seconds, how long certain events last
 CAMERASLACK = 90     # how far from the center the squirrel moves before moving the camera
@@ -292,9 +293,9 @@ def runGame():
                 bObj['movex'] = 20
                 bObj['movey'] = 20
                 if bObj['movex'] > 0: # faces right
-                    bObj['surface'] = pygame.transform.scale(HUMAN, (bObj['width'], bObj['height']))
+                    bObj['surface'] = pygame.transform.scale(VINCENT, (bObj['width'], bObj['height']))
                 else: # faces left
-                    bObj['surface'] = pygame.transform.scale(HUMAN, (bObj['width'], bObj['height']))
+                    bObj['surface'] = pygame.transform.scale(VINCENT, (bObj['width'], bObj['height']))
           
         # go through all the objects and see if any need to be deleted.
         # KB: 'isOutsideActiveArea' takes the coordinates of the camera and the objects and determines if the objects are in the active area
@@ -596,7 +597,7 @@ def runGame():
                             
             for i in range(len(bearObjs)-1, -1, -1):
                 beObj = bearObjs[i]
-                if 'rect' in beObj and playerObj['rect'].colliderect(sqObj['rect']):
+                if 'rect' in beObj and playerObj['rect'].colliderect(beObj['rect']):
                     # a player/bear collision has occurred
 
                     if beObj['width'] * beObj['height'] <= playerObj['size']**2:
@@ -625,8 +626,8 @@ def runGame():
                         # player is smaller and takes damage
                         invulnerableMode = True
                         invulnerableStartTime = time.time()
-                        playerObj['health'] -= 1
-                        if playerObj['health'] == 0:
+                        playerObj['health'] -= 3
+                        if playerObj['health'] <= 0:
                             gameOverMode = True # turn on "game over mode"
                             gameOverStartTime = time.time()
 
@@ -677,13 +678,23 @@ def runGame():
 
         # check if the player has won.
         if winMode:
+            invulnerableMode = False
+            if playerObj['health'] <= 0:
+                    DISPLAYSURF.fill(BLACK)
             DISPLAYSURF.blit(winSurf, winRect)
             #time.sleep(2)
             #DISPLAYSURF.blit(winSurf3, winRect3)
             #time.sleep(3)
+            humanObjs = []
+            food1Objs = []
+            food2Objs = []
+            food3Objs = []
+            #GRASSIMAGES = []
             while len(bearObjs) < NUMBEARS:
                 bearObjs.append(makeNewBear(camerax, cameray))
+                
             DISPLAYSURF.blit(winSurf2, winRect2)
+
 
         pygame.display.update()
         FPSCLOCK.tick(FPS)
@@ -829,12 +840,12 @@ def makeNewHuman(camerax, cameray):
 #LK: defining general squirrel size and deviation range as well as speed
 def makeNewBear(camerax, cameray):
     fd = {}
-    generalSize = 200
+    generalSize = 400
     fd['width']  = generalSize
     fd['height'] = generalSize
     fd['x'], fd['y'] = getRandomOffCameraPos(camerax, cameray, fd['width'], fd['height'])
-    fd['movex'] = 20
-    fd['movey'] = 20
+    fd['movex'] = 8
+    fd['movey'] = 8
     #LK: create mirrored image of bear using previously defined size 
     #LK: this is used for when the bear changes direction and must be mirrored
     if fd['movex'] < 0: #bear is facing left
