@@ -32,8 +32,8 @@ CAMERASLACK = 90     # how far from the center the squirrel moves before moving 
 MOVERATE = 9         # how fast the player moves
 BOUNCERATE = 6       # how fast the player bounces (large is slower)
 BOUNCEHEIGHT = 30    # how high the player bounces
-STARTSIZE = 25       # how big the player starts off
-WINSIZE = 100        # how big the player needs to be to win
+STARTSIZE = 35       # how big the player starts off
+WINSIZE = 110        # how big the player needs to be to win
 INVULNTIME = 2       # how long the player is invulnerable after being hit in seconds
 GAMEOVERTIME = 4     # how long the "game over" text stays on the screen in seconds
 WINTIME = 4          # how long the winSurf messages stay on the screen in seconds 
@@ -94,8 +94,6 @@ def main():
     # load the image files
     L_RJ = pygame.image.load('rj.png')
     R_RJ = pygame.transform.flip(L_RJ, True, False)
-    L_SQUIR_IMG = pygame.image.load('squirrel.png')
-    R_SQUIR_IMG = pygame.transform.flip(L_SQUIR_IMG, True, False)
     VINCENT = pygame.image.load('bear.png')
     FOOD1 = pygame.image.load('food1.png')
     FOOD2 = pygame.image.load('food2.png')
