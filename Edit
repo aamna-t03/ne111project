@@ -16,8 +16,8 @@ from pygame.locals import *
 
 #AT: the dimensions of the playing screen are defined as well as the speed of the animation. All these variables are constant values 
 FPS = 30 # frames per second to update the screen
-WINWIDTH = 640 # width of the program's window, in pixels
-WINHEIGHT = 480 # height in pixels
+WINWIDTH = 800 # width of the program's window, in pixels
+WINHEIGHT = 640 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
@@ -834,12 +834,12 @@ def makeNewHuman(camerax, cameray):
 #LK: defining general squirrel size and deviation range as well as speed
 def makeNewBear(camerax, cameray):
     fd = {}
-    generalSize = 500
+    generalSize = 600
     fd['width']  = generalSize
     fd['height'] = generalSize
     fd['x'], fd['y'] = getRandomOffCameraPos(camerax, cameray, fd['width'], fd['height'])
-    fd['movex'] = 8
-    fd['movey'] = 8
+    fd['movex'] = 15
+    fd['movey'] = 15
     #LK: create mirrored image of bear using previously defined size 
     #LK: this is used for when the bear changes direction and must be mirrored
     if fd['movex'] < 0: #bear is facing left
