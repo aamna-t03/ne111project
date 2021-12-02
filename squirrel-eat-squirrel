@@ -396,7 +396,8 @@ def runGame():
 
 
 # LK: defining health meter display
-# LK: first defines the red blocks representing the player's health, then the unfilled white rectangle for empty possible health
+# LK: first defines the red blocks representing the player's health,
+# LK: then the unfilled white rectangle for empty possible health
 def drawHealthMeter(currentHealth):
     for i in range(currentHealth): # draw red health bars
         pygame.draw.rect(DISPLAYSURF, RED,   (15, 5 + (10 * MAXHEALTH) - i * 10, 20, 10))
