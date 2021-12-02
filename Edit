@@ -293,7 +293,7 @@ def runGame():
                 bObj['movex'] = 20
                 bObj['movey'] = 20
                 if bObj['movex'] > 0: # faces right
-                    bObj['surface'] = pygame.transform.scale(VINCENT, (bObj['width'], bObj['height']))
+                    bObj['surface'] = pygame.transform.scale(R_VINCENT, (bObj['width'], bObj['height']))
                 else: # faces left
                     bObj['surface'] = pygame.transform.scale(VINCENT, (bObj['width'], bObj['height']))
           
