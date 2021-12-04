@@ -95,7 +95,8 @@ def main():
     pygame.display.set_caption('If You Give an RJ a Juicebox')
     BASICFONT = pygame.font.Font('freesansbold.ttf', 32)
 
-    # AT: this part of the function also ensures that the RJ images are oriented upright by using the built in pygame.transform.flip function  
+    # AT: this part of the function also ensures that the RJ images are 
+    # oriented upright by using the built in pygame.transform.flip function  
     # load the image files
     L_RJ = pygame.image.load('rj.png')
     R_RJ = pygame.transform.flip(L_RJ, True, False)
