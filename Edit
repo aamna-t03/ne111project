@@ -40,7 +40,7 @@ WINTIME = 4          # how long the winSurf messages stay on the screen in secon
 MAXHEALTH = 3        # how much health the player starts with
 
 #AT: defining the number of objects in the active area and setting statistics for the objects 
-NUMGRASS = 80        # number of grass objects in the active area
+NUMCHARACTER = 80        # number of character objects in the active area
 NUMBEARS = 1         #number of bears
 NUMFOOD = 10         # number of squirrels in the active area
 NUMHUMAN = 6         # number of humans in the active area 
@@ -53,7 +53,7 @@ RIGHT = 'right'      # setting the right control variable
 #AT: the following is a long string defining terminology that is used throughout the code 
 #AT: side note - the term 'active area' is a bounded area (a HALF_WINWIDTH and HALF_WINHEIGHT) on all sides of the camera view, where objects exist and are created 
 """
-This program has three data structures to represent the player, enemy squirrels, and grass background objects. The data structures are dictionaries with the following keys:
+This program has three data structures to represent the player, enemy squirrels, and background characters. The data structures are dictionaries with the following keys:
 
 Keys used by all three data structures:
     'x' - the left edge coordinate of the object in the game world (not a pixel coordinate on the screen)
@@ -74,15 +74,15 @@ Enemy Squirrel data structure keys:
     'bounce' - represents at what point in a bounce the player is in. 0 means standing (no bounce), up to BOUNCERATE (the completion of the bounce)
     'bouncerate' - how quickly the squirrel bounces. A lower number means a quicker bounce.
     'bounceheight' - how high (in pixels) the squirrel bounces
-Grass data structure keys:
-    'grassImage' - an integer that refers to the index of the pygame.Surface object in GRASSIMAGES used for this grass object
+Character data structure keys:
+    'characterImage' - an integer that refers to the index of the pygame.Surface object in CHARACTERIMAGES used for this character object
 Food data structure keys:
     'foodImages' - an integer that refers to the index of the pygame.Surface object in FOODIMAGES for this food object 
 """
 #AT: a function setting up the game's main screen, the icons and images that are used as well as the fonts used for text and an internal timer
 #AT: if this funtion results in true, it will run the game
 def main():
-    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_RJ, R_RJ, GRASSIMAGES, L_SQUIR_IMG, R_SQUIR_IMG, FOOD1, FOOD2, FOOD3, HUMAN, VINCENT
+    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_RJ, R_RJ, CHARACTERIMAGES, L_SQUIR_IMG, R_SQUIR_IMG, FOOD1, FOOD2, FOOD3, HUMAN, VINCENT
 
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
@@ -99,9 +99,9 @@ def main():
     FOOD2 = pygame.image.load('food2.png')
     FOOD3 = pygame.image.load('food3.png')
     HUMAN = pygame.image.load('human.png')
-    GRASSIMAGES = []
+    CHARACTERIMAGES = []
     for i in range(1, 5):
-        GRASSIMAGES.append(pygame.image.load('character%s.png' % i))
+        CHARACTERIMAGES.append(pygame.image.load('character%s.png' % i))
     while True:
         runGame()
 
@@ -146,9 +146,9 @@ def runGame():
     cameray = 0
 
     # KB: Tracking the location of objects 
-    # KB: as grass is added to the screen it is added to the list 'grassObjs' 
+    # KB: as characters are added to the screen they are added to the list 'characterObjs' 
     # KB: as enemy squirrels are added to the screen, they are added to the list 'food1Objs'
-    grassObjs = []    # stores all the grass objects in the game
+    characterObjs = []    # stores all the character objects in the game
     food1Objs = []    # stores all the non-player food1 objects
     food3Objs = []    # stores all the non-player food3 objects
     food1Objs = []    # stores all the non-player squirrel objects
@@ -172,11 +172,11 @@ def runGame():
     moveUp    = False
     moveDown  = False
 
-    # start off with some random grass images on the screen
+    # start off with some random character images on the screen
     for i in range(10):
-        grassObjs.append(makeNewGrass(camerax, cameray))
-        grassObjs[i]['x'] = random.randint(0, WINWIDTH)
-        grassObjs[i]['y'] = random.randint(0, WINHEIGHT)
+        characterObjs.append(makeNewCharacter(camerax, cameray))
+        characterObjs[i]['x'] = random.randint(0, WINWIDTH)
+        characterObjs[i]['y'] = random.randint(0, WINHEIGHT)
 
     # KB: the game loop will update game state, do event handling, and create everything on the screen
     while True: # main game loop
@@ -298,9 +298,9 @@ def runGame():
         # go through all the objects and see if any need to be deleted.
         # KB: 'isOutsideActiveArea' takes the coordinates of the camera and the objects and determines if the objects are in the active area
         # KB: if the objects are outside the active area, then they are deleted 
-        for i in range(len(grassObjs) - 1, -1, -1):
-            if isOutsideActiveArea(camerax, cameray, grassObjs[i]):
-                del grassObjs[i]
+        for i in range(len(characterObjs) - 1, -1, -1):
+            if isOutsideActiveArea(camerax, cameray, characterObjs[i]):
+                del characterObjs[i]
         for i in range(len(food1Objs) - 1, -1, -1):
             if isOutsideActiveArea(camerax, cameray, food1Objs[i]):
                 del food1Objs[i]
@@ -318,12 +318,12 @@ def runGame():
                 del food2Objs[i]
   
 
-        # add more grass & squirrels if we don't have enough.
-        # KB: based on predetermined limits of grass (NUMGRASS) and squirrels (NUMFOOD) 
-        # KB: if the length of the 'grassObj' list drops below 'NUMGRASS', more grass objects are added, and
+        # add more characters & squirrels if we don't have enough.
+        # KB: based on predetermined limits of characters (NUMCHARACTER) and squirrels (NUMFOOD) 
+        # KB: if the length of the 'characterObj' list drops below 'NUMCHARACTER', more character objects are added, and
         # KB: if the length of the 'squirrelObj' list goes below 'NUMFOOD', more squirrels are created 
-        while len(grassObjs) < NUMGRASS:
-            grassObjs.append(makeNewGrass(camerax, cameray))
+        while len(characterObjs) < NUMCHARACTER:
+            characterObjs.append(makeNewCharacter(camerax, cameray))
         while len(food1Objs) < NUMFOOD:
             food1Objs.append(makeNewFood1(camerax, cameray))
         while len(food3Objs) < NUMFOOD:
@@ -354,14 +354,14 @@ def runGame():
         # draw the green background
         DISPLAYSURF.fill(GRASSCOLOR)
 
-        # draw all the grass objects on the screen
-        # HH: Determine properties and position of all the grass images
-        for gObj in grassObjs:
-            gRect = pygame.Rect( (gObj['x'] - camerax,
-                                  gObj['y'] - cameray,
-                                  gObj['width'],
-                                  gObj['height']) )
-            DISPLAYSURF.blit(GRASSIMAGES[gObj['grassImage']], gRect)
+        # draw all the character objects on the screen
+        # HH: Determine properties and position of all the character images
+        for chObj in characterObjs:
+            chRect = pygame.Rect( (chObj['x'] - camerax,
+                                  chObj['y'] - cameray,
+                                  chObj['width'],
+                                  chObj['height']) )
+            DISPLAYSURF.blit(CHARACTERIMAGES[chObj['characterImage']], chRect)
 
 
         # draw the humans and food
@@ -851,16 +851,16 @@ def makeNewBear(camerax, cameray):
     fd['bounceheight'] = random.randint(10, 50)
     return fd
 
-#LK: creating new grass objects inside the active area outside the camera view
-#LK: defining how each grass image will be stored 
-def makeNewGrass(camerax, cameray):
-    gr = {}
-    gr['grassImage'] = random.randint(0, len(GRASSIMAGES) - 1)
-    gr['width']  = GRASSIMAGES[0].get_width()
-    gr['height'] = GRASSIMAGES[0].get_height()
-    gr['x'], gr['y'] = getRandomOffCameraPos(camerax, cameray, gr['width'], gr['height'])
-    gr['rect'] = pygame.Rect( (gr['x'], gr['y'], gr['width'], gr['height']) )
-    return gr
+#LK: creating new character objects inside the active area outside the camera view
+#LK: defining how each character image will be stored 
+def makeNewCharacter(camerax, cameray):
+    chara = {}
+    chara['characterImage'] = random.randint(0, len(CHARACTERIMAGES) - 1)
+    chara['width']  = CHARACTERIMAGES[0].get_width()
+    chara['height'] = CHARACTERIMAGES[0].get_height()
+    chara['x'], chara['y'] = getRandomOffCameraPos(camerax, cameray, chara['width'], chara['height'])
+    chara['rect'] = pygame.Rect( (chara['x'], chara['y'], chara['width'], chara['height']) )
+    return chara
 
 
 #LK: defining boundaries of the extent of the active area rectangle
