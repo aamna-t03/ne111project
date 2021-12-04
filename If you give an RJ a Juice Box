@@ -4,7 +4,7 @@
 # AT -> Aamna Tahir 
 
 
-# If You Give an RJ a Juicebox (A modification of Squirrel Eat Squirrel)
+# If You Give an RJ a Juice Box (A modification of Squirrel Eat Squirrel)
 # By Kaitlyn, Hudson, Lauren and Aamna
 # http://inventwithpython.com/pygame
 
@@ -92,7 +92,7 @@ def main():
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINWIDTH, WINHEIGHT))
-    pygame.display.set_caption('If You Give an RJ a Juicebox')
+    pygame.display.set_caption('If You Give an RJ a Juice Box')
     BASICFONT = pygame.font.Font('freesansbold.ttf', 32)
 
     # AT: this part of the function also ensures that the RJ images are 
