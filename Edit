@@ -8,25 +8,27 @@
 # By Kaitlyn, Hudson, Lauren and Aamna
 # http://inventwithpython.com/pygame
 
-#AT
-#AT: the modules random, sys, time, math and pygame are being imported 
+# AT
+# AT: the modules random, sys, time, math and pygame are being imported 
 import random, sys, time, math, pygame 
 from pygame.locals import *
 
-#AT: the dimensions of the playing screen are defined as well as the speed of the animation. All these variables are constant values 
+# AT: the dimensions of the playing screen are defined as well as the speed of the animation. 
+# AT: All these variables are constant values 
 FPS = 30 # frames per second to update the screen
 WINWIDTH = 800 # width of the program's window, in pixels
 WINHEIGHT = 640 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
-#AT: assigning RGB colour codes for the colour variables, green for the background, white for text and health bar outline, and red for the health bar levels
+# AT: assigning RGB colour codes for the colour variables, green for the background, 
+# AT: white for text and health bar outline, and red for the health bar levels
 GRASSCOLOR = (48, 245, 120)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 
-#AT: assigning numerical values for various allowed movements in the game, limits for the players health bar, and in seconds, how long certain events last
+# AT: assigning numerical values for various allowed movements in the game, limits for the players health bar, and in seconds, how long certain events last
 CAMERASLACK = 90     # how far from the center the RJ moves before moving the camera
 MOVERATE = 9         # how fast the player moves
 BOUNCERATE = 6       # how fast the player bounces (large is slower)
@@ -38,7 +40,7 @@ GAMEOVERTIME = 4     # how long the "game over" text stays on the screen in seco
 WINTIME = 4          # how long the winSurf messages stay on the screen in seconds 
 MAXHEALTH = 3        # how much health the player starts with
 
-#AT: defining the number of objects in the active area and setting statistics for the objects 
+# AT: defining the number of objects in the active area and setting statistics for the objects 
 
 NUMCHARACTER = 80        # number of character objects in the active area
 NUMBEARS = 1         #number of bears
@@ -50,8 +52,8 @@ DIRCHANGEFREQ = 2    # % chance of direction change per frame
 LEFT = 'left'        # setting the left control variable 
 RIGHT = 'right'      # setting the right control variable 
 
-#AT: the following is a long string defining terminology that is used throughout the code 
-#AT: side note - the term 'active area' is a bounded area (a HALF_WINWIDTH and HALF_WINHEIGHT) on all sides of the camera view, where objects exist and are created 
+# AT: the following is a long string defining terminology that is used throughout the code 
+# AT: side note - the term 'active area' is a bounded area (a HALF_WINWIDTH and HALF_WINHEIGHT) on all sides of the camera view, where objects exist and are created 
 """
 
 This program has five data structures to represent RJ, the bear, food, humans and background characters. The data structures are dictionaries with the following keys:
@@ -82,8 +84,8 @@ Character data structure keys:
 Food data structure keys:
     'foodImages' - an integer that refers to the index of the pygame.Surface object in FOODIMAGES for this food object 
 """
-#AT: a function setting up the game's main screen, the icons and images that are used as well as the fonts used for text and an internal timer
-#AT: if this funtion results in true, it will run the game
+# AT: a function setting up the game's main screen, the icons and images that are used as well as the fonts used for text and an internal timer
+# AT: if this funtion results in true, it will run the game
 def main():
     global FPSCLOCK, DISPLAYSURF, BASICFONT, L_RJ, R_RJ, CHARACTERIMAGES, L_SQUIR_IMG, R_SQUIR_IMG, FOOD1, FOOD2, FOOD3, HUMAN, VINCENT
 
