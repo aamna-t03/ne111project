@@ -56,7 +56,7 @@ RIGHT = 'right'      # setting the right control variable
 
 This program has five data structures to represent RJ, the bear, food, humans and background characters. The data structures are dictionaries with the following keys:
 
-Keys used by all three data structures:
+Keys used by all five data structures:
     'x' - the left edge coordinate of the object in the game world (not a pixel coordinate on the screen)
     'y' - the top edge coordinate of the object in the game world (not a pixel coordinate on the screen)
     'rect' - the pygame.Rect object representing where on the screen the object is located.
