@@ -22,7 +22,6 @@ HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
 #AT: assigning RGB colour codes for the colour variables, green for the background, white for text and health bar outline, and red for the health bar levels
 GRASSCOLOR = (48, 245, 120)
-SCARYGREEN =(7, 78, 33)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
@@ -673,7 +672,6 @@ def runGame():
 
         # check if the player has won.
         if winMode:
-            DISPLAYSURF.fill(SCARYGREEN)
             invulnerableMode = False
             if playerObj['health'] <= 0:
                     DISPLAYSURF.fill(BLACK)
